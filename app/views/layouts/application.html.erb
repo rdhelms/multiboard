@@ -13,10 +13,13 @@
   </head>
 
   <body ng-app='multiboard'>
-    <h1>This is the header</h1>
-
-    <button ui-sref="board.login">Login Page</button>
-    <button ui-sref="board.draw">Draw Page</button>
+    <header class="drawHeader">
+      <h1>This is the header</h1>
+      <nav>
+        <button ui-sref="board.login">Login Page</button>
+        <button ui-sref="board.draw">Draw Page</button>
+      </nav>
+    </header>
 
     <ui-view></ui-view>
   </body>

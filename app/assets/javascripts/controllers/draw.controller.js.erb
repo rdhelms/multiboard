@@ -1,0 +1,254 @@
+angular.module('multiboard').controller('drawCtrl', function($state) {
+
+  this.drawTest = "This is where the HTML canvas would be for drawing.";
+
+  var myCanvas = document.getElementById('myCanvas');
+  var canvasPos = {
+    x: myCanvas.getBoundingClientRect().left,
+    y: myCanvas.getBoundingClientRect().top
+  };
+  var draw = myCanvas.getContext('2d');
+
+  var blueCircleImg = document.createElement("img");
+  blueCircleImg.src = "<%= asset_path('bluecircle.png')%>";
+
+  var drawHandle = -1;
+  var moveHandle = -1;
+  var mouseEvent;
+  var moved = false;
+  var moveSpeed = 5;
+  var moving = {
+    left: false,
+    right: false,
+    up: false,
+    down: false
+  };
+
+  var allCircles = [];
+  var allSquares = [];
+
+  var drawing = {
+    circles: false,
+    squares: true
+  };
+
+  function Square(x, y, width, height, color) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.color = color;
+    this.draw = function() {
+      draw.fillStyle = this.color;
+      draw.fillRect(this.x, this.y, this.width, this.height);
+    }
+  }
+
+  function Circle(x, y, radius, color) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.draw = function() {
+      // Can draw using an image.
+      // draw.drawImage(blueCircleImg, this.x, this.y, this.radius, this.radius);
+
+      // Can also draw using shapes.
+      draw.beginPath();
+      draw.fillStyle = this.color;
+      draw.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+      draw.fill();
+    }
+  }
+
+
+  function mouseDown(event) {
+    if (drawHandle === -1) {
+      drawHandle = setInterval(mousePressed, 100);
+    }
+  }
+
+  function mouseUp(event) {
+    if (drawHandle !== -1) {
+      console.log("Mouse lifted!");
+      clearInterval(drawHandle);
+      drawHandle = -1;
+    }
+  }
+
+  function mousePressed() {
+      if (moved && drawing.circles) {
+        var radius = parseInt( $('.sizeRadius').val() ) || 15;
+        var color = $('.colorPicker').val();
+        var newCircle = new Circle(mouseEvent.clientX - canvasPos.x, mouseEvent.clientY - canvasPos.y, radius, color);
+        newCircle.draw();
+        allCircles.push(newCircle);
+        moved = false;
+      } else if (moved && drawing.squares) {
+        var width = parseInt( $('.sizeWidth').val() ) || 140;
+        var height = parseInt( $('.sizeHeight').val() ) || 100;
+        var color = $('.colorPicker').val();
+        var newSquare = new Square(mouseEvent.clientX - width / 2 - canvasPos.x, mouseEvent.clientY - height / 2 - canvasPos.y, width, height, color);
+        newSquare.draw();
+        allSquares.push(newSquare);
+        moved = false;
+      }
+  }
+
+  function findCollisions() {
+    var foundCollision = {
+      left: false,
+      right: false,
+      up: false,
+      down: false
+    };
+    allCircles.forEach(function(circle) {
+      allSquares.forEach(function(square) {
+        if (circle.x - circle.radius <= square.x + square.width && circle.x - circle.radius >= square.x && circle.y >= square.y && circle.y <= square.y + square.height) {
+          foundCollision.left = true;
+          moving.left = false;
+        }
+        if (circle.x + circle.radius <= square.x + square.width && circle.x + circle.radius >= square.x && circle.y >= square.y && circle.y <= square.y + square.height) {
+          foundCollision.right = true;
+          moving.right = false;
+        }
+        if (circle.x <= square.x + square.width && circle.x >= square.x && circle.y - circle.radius >= square.y && circle.y - circle.radius <= square.y + square.height) {
+          foundCollision.up = true;
+          moving.up = false;
+        }
+        if (circle.x <= square.x + square.width && circle.x >= square.x && circle.y + circle.radius >= square.y && circle.y + circle.radius <= square.y + square.height) {
+          foundCollision.down = true;
+          moving.down = false;
+        }
+      });
+      if (circle.x <= 0) {
+        foundCollision.left = true;
+        moving.left = false;
+      }
+      if (circle.x >= myCanvas.width) {
+        foundCollision.right = true;
+        moving.right = false;
+      }
+      if (circle.y <= 0) {
+        foundCollision.up = true;
+        moving.up = false;
+      }
+      if (circle.y >= myCanvas.height) {
+        foundCollision.down = true;
+        moving.down = false;
+      }
+    });
+    return foundCollision;
+  }
+
+  function handleKeyDown(event) {
+    if (event.keyCode === 37) {
+      moving = {
+        left: !moving.left,
+        up: false,
+        right: false,
+        down: false
+      };
+    } else if (event.keyCode === 38) {
+      moving = {
+        left: false,
+        up: !moving.up,
+        right: false,
+        down: false
+      };
+    } else if (event.keyCode === 39) {
+      moving = {
+        left: false,
+        up: false,
+        right: !moving.right,
+        down: false
+      };
+    } else if (event.keyCode === 40) {
+      moving = {
+        left: false,
+        up: false,
+        right: false,
+        down: !moving.down
+      };
+    } else {
+      moving = {
+        left: false,
+        up: false,
+        right: false,
+        down: false
+      }
+    }
+    if ( moving.left || moving.up || moving.right || moving.down ) {
+      clearInterval(moveHandle);
+      moveHandle = setInterval(moveCircles, 20);
+    } else {
+      clearInterval(moveHandle);
+    }
+  }
+
+  function moveCircles() {
+    if (moving.left && !findCollisions().left) {
+      draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      drawSquares();
+      allCircles.forEach(function(circle) {
+        circle.x -= moveSpeed;
+        circle.draw();
+      });
+    } else if (moving.right && !findCollisions().right) {
+      draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      drawSquares();
+      allCircles.forEach(function(circle) {
+        circle.x += moveSpeed;
+        circle.draw();
+      });
+    } else if (moving.up && !findCollisions().up) {
+      draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      drawSquares();
+      allCircles.forEach(function(circle) {
+        circle.y -= moveSpeed;
+        circle.draw();
+      });
+    } else if (moving.down && !findCollisions().down) {
+      draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      drawSquares();
+      allCircles.forEach(function(circle) {
+        circle.y += moveSpeed;
+        circle.draw();
+      });
+    }
+  }
+
+  function drawSquares() {
+    for (var index = 0; index < allSquares.length; index++) {
+      var square = allSquares[index];
+      square.draw();
+    }
+  }
+
+  $('.characterDraw').click(function() {
+    console.log("Drawing character!");
+    drawing = {
+      circles: true,
+      squares: false
+    };
+  });
+
+  $('.objectDraw').click(function() {
+    console.log("Drawing objects!");
+    drawing = {
+      circles: false,
+      squares: true
+    }
+  });
+
+  $(document).on('keydown', handleKeyDown);
+
+  $(myCanvas).on('mousedown', mouseDown);
+  $(myCanvas).on('mouseup', mouseUp);
+  $(myCanvas).on('mouseleave', mouseUp);
+  $(myCanvas).on('mousemove', function(event) {
+    mouseEvent = event;
+    moved = true;
+  });
+
+});

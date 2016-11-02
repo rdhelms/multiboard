@@ -1,0 +1,67 @@
+/********** Setup ***********/
+@import 'partials/setup/variables';
+@import 'partials/setup/reset';
+@import 'partials/setup/fonts';
+@import 'partials/setup/general';
+
+/***** Site Components ******/
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.loginSection {
+  position: relative;
+  top: 100px;
+}
+
+.drawHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  background: gray;
+  color: white;
+  height: 100px;
+}
+
+.drawSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: beige;
+}
+
+.canvasContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: gray;
+  width: 750px;
+  height: 550px;
+  margin: 20px;
+  border: 1px solid black;
+}
+
+.optionsContainer {
+  height: 550px;
+  button {
+    height: 40px;
+    width: 150px;
+  }
+  .option {
+    height: 40px;
+    width: 150px;
+    background: white;
+  }
+}
+
+#myCanvas {
+  background: white;
+  border: 1px solid blue;
+}
