@@ -241,6 +241,28 @@ angular.module('multiboard').controller('drawCtrl', function($state) {
     }
   });
 
+  $('.clearCanvas').click(function() {
+    console.log("Cleared!");
+    allSquares = [];
+    allCircles = [];
+    draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+  });
+
+  $('.saveCanvas').click(function() {
+    console.log("Saved!");
+    var name = 'dirt_path';
+    $.ajax({
+      url: "board/get?name=" + name,
+      method: "GET",
+      success: function(response) {
+        console.log(response);
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
+  });
+
   $(document).on('keydown', handleKeyDown);
 
   $(myCanvas).on('mousedown', mouseDown);

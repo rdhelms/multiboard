@@ -1,15 +1,25 @@
 <section class="drawSection">
 
-    <div class="colorOptions">
-      <label for="colorPicker">Pick Color</label>
-      <input class="colorPicker" type="color" value="#005500">
+    <div class="leftOptions">
+      <div class="option">
+        <label for="colorPicker">Pick Color</label>
+        <input class="colorPicker" type="color" value="#005500">
+      </div>
+
+      <div class="option">
+        <button class="clearCanvas">Clear Canvas</button>
+      </div>
+
+      <div class="option">
+        <button class="saveCanvas">Save Canvas</button>
+      </div>
     </div>
 
     <div class="canvasContainer">
       <canvas id="myCanvas" width="700" height="500"></canvas>
     </div>
 
-    <div class="optionsContainer">
+    <div class="rightOptions">
       <div class="option">
         <label for="sizeRadius">Pick Radius</label>
         <input class="sizeRadius" type="number" value="15">
