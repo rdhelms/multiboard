@@ -5,3 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+dirt_path = File.join(Rails.root, 'app', 'assets', 'images', 'dirt_path.png')
+Background.create(
+  name: 'dirt_path',
+  code: File.binread(dirt_path)
+)
