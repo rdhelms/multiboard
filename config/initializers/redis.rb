@@ -12,9 +12,9 @@ require 'redis'
 # # To clear out the db before each test
 # Redis.current.flushdb if Rails.env == "test"
 # Redis.current = Redis.new(:host => 'localhost', :port => 6379)
-if Rails.env.production?
-  uri = URI.parse(ENV['REDIS_URL'])
-  Redis.current = Redis.new(:url => uri)
-else
-  Redis.current = Redis.new(:host => 'localhost', :port => 6379)
-end
+# if Rails.env.production?
+#   uri = URI.parse(ENV['REDIS_URL'])
+#   Redis.current = Redis.new(:url => uri)
+# else
+#   Redis.current = Redis.new(:host => 'localhost', :port => 6379)
+# end
