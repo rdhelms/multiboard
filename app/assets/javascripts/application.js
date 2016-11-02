@@ -1,4 +1,4 @@
-//= require jquery/jquery.min.js
+//= require dist/jquery.min.js
 //= require angular/angular.min.js
 //= require angular-local-storage/dist/angular-local-storage.min.js
 //= require angular-ui-router/release/angular-ui-router.min.js
