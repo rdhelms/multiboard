@@ -37,6 +37,19 @@
   background: beige;
 }
 
+.colorOptions {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 550px;
+  input[type="color"] {
+    margin-top: 10px;
+    height: 40px;
+    width: 150px;
+  }
+}
+
 .canvasContainer {
   display: flex;
   align-items: center;
@@ -50,14 +63,15 @@
 
 .optionsContainer {
   height: 550px;
-  button {
-    height: 40px;
-    width: 150px;
+  button, input[type='number'] {
+    padding: 5px;
+    height: 30px;
+    width: 120px;
   }
   .option {
     height: 40px;
     width: 150px;
-    background: white;
+    margin-bottom: 70px;
   }
 }
 
