@@ -1,0 +1,23 @@
+(function() {
+  "use strict";
+
+  angular.module('multiboard', ['templates', 'ui.router', 'LocalStorageModule'])
+        .config(function($stateProvider, $urlRouterProvider) {
+          $urlRouterProvider.otherwise('/');
+
+          $stateProvider.state('board', {
+            url: '/',
+            abstract: true,
+            template: '<ui-view></ui-view>'
+          }).state('board.login', {
+            url: '',
+            templateUrl: 'login.html',
+            controller: 'loginCtrl as login'
+          }).state('board.draw', {
+            url: 'draw',
+            templateUrl: 'board.html',
+            controller: 'drawCtrl as draw'
+          });
+        });
+
+})();

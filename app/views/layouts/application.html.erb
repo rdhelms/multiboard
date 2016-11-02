@@ -12,10 +12,12 @@
     <title>Multiboard</title>
   </head>
 
-  <body ng-app='Multiboard' ng-controller='MainCtrl'>
-    <div>
-      {{test}}
-    </div>
-    <p> hi </p>
+  <body ng-app='multiboard'>
+    <h1>This is the header</h1>
+
+    <button ui-sref="board.login">Login Page</button>
+    <button ui-sref="board.draw">Draw Page</button>
+
+    <ui-view></ui-view>
   </body>
 </html>
