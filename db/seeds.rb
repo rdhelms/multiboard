@@ -11,6 +11,30 @@ Background.create(
   code: File.binread(dirt_path)
 )
 
+weird_background = File.join(Rails.root, 'app', 'assets', 'images', 'weird_background.png')
+Background.create(
+  name: 'weird_background',
+  code: File.binread(weird_background)
+)
+
+happy_halloween = File.join(Rails.root, 'app', 'assets', 'images', 'happy_halloween.png')
+Background.create(
+  name: 'happy_halloween',
+  code: File.binread(happy_halloween)
+)
+
+nate_background = File.join(Rails.root, 'app', 'assets', 'images', 'nate_background.png')
+Background.create(
+  name: 'nate_background',
+  code: File.binread(nate_background)
+)
+
+corridor_background = File.join(Rails.root, 'app', 'assets', 'images', 'corridor_background.png')
+Background.create(
+  name: 'corridor_background',
+  code: File.binread(corridor_background)
+)
+
 Scene.create(
   name: 'name',
   data: "{ name: 'hi mom',
