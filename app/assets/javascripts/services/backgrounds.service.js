@@ -15,7 +15,7 @@
       }
     }
 
-    this.getPublicBackgroundByName = function(name) {
+    getPublicBackgroundByName = function(name) {
       $.ajax({
         url: "board/get?name=" + name,
         method: "GET",
@@ -28,7 +28,7 @@
       });
     }
 
-    this.getPublicBackgrounds = function() {
+    getPublicBackgrounds = function() {
       $.ajax({
         url: "board/get",
         method: "GET",
@@ -41,7 +41,7 @@
       });
     }
 
-    this.publishBackground = function(background) {
+    publishBackground = function(background) {
       $.ajax({
         url: "board?name=" + background.name,
         method: "POST",
@@ -55,7 +55,7 @@
       });
     }
 
-    this.updateBackground = function(background) {
+    updateBackground = function(background) {
       $.ajax({
         url: "board?name=" + background.name,
         method: "POST",
@@ -95,8 +95,8 @@
         case 'user':
           return getBackgrounds('user');
           break;
-        case 'all':
-          return getBackgrounds('all');
+        case 'public':
+          return getBackgrounds('public');
           break;
       }
     };

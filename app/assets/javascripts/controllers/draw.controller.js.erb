@@ -28,6 +28,11 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     up: false,
     down: false
   };
+  var drawing = {
+    circles: false,
+    squares: false,
+    background: true
+  };
 
   this.sceneName =  this.currentScene.name || '';
   this.allCircles = this.currentScene.mobileArr || [];
@@ -69,12 +74,6 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   drawBackgroundSquares();
   drawCircles();
   drawSquares();
-
-  var drawing = {
-    circles: false,
-    squares: true,
-    background: false
-  };
 
   function Square(x, y, width, height, color) {
     this.x = x;
@@ -322,9 +321,12 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   });
 
   $('.clearCanvas').click(function() {
-    self.allSquares = [];
-    self.allCircles = [];
-    draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+    // self.allSquares = [];
+    // self.allCircles = [];
+    // self.allBackgroundSquares = [];
+    Scenes.selectScene({})
+    Backgrounds.selectBackground({});
+    $state.reload();
   });
 
   $('.saveScene').click(function() {
@@ -334,7 +336,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
       mobileArr: self.allCircles,
       thumbnail: myCanvas.toDataURL()
     });
-    
+    Scenes.selectScene(newScene);
   });
 
   $('.publishScene').click(function() {
@@ -348,11 +350,12 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   });
 
   $('.saveBackground').click(function() {
-    Backgrounds.create({
+    var newBackground = Backgrounds.create({
       name: self.backgroundName,
       staticArr: self.allBackgroundSquares,
       thumbnail: myCanvas.toDataURL()
     });
+    Backgrounds.selectBackground(newBackground);
   });
 
   $('.publishBackground').click(function() {
