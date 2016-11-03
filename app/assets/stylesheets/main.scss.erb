@@ -22,9 +22,17 @@ body {
 .scenesSection {
   position: relative;
   top: 100px;
+  .sceneOption {
+    margin: 20px 0;
+    background: white;
+    &:hover {
+      outline: 2px solid black;
+    }
+  }
 }
 
 .allHeader {
+  z-index: 10;
   background: url("<%= asset_path('dark_wood.png')%>");
   display: flex;
   flex-direction: column;
@@ -50,6 +58,12 @@ body {
   justify-content: center;
   width: 100vw;
   padding: 25px;
+  .sceneName {
+    position: absolute;
+    top: 0;
+    padding: 5px;
+    font-size: 25px;
+  }
 }
 
 .leftOptions {
@@ -101,4 +115,5 @@ body {
 #myCanvas {
   background: white;
   border: 1px solid blue;
+  cursor: url("<%= asset_path('brush_cursor.png')%>"), auto;
 }

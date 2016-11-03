@@ -1,4 +1,14 @@
 <section class="scenesSection">
   <h1>This is the scenes page</h1>
-  <p>{{scenes.scenesTest}}</p>
+
+  <button class="getScenesBtn">View All Scenes</button>
+  <button class="deleteScenesBtn">Delete All Scenes</button>
+
+  <ul>
+    <li class="sceneOption" ng-click="scenes.selectScene(scene)" ng-repeat="scene in scenes.allScenes">
+      <p>Name: {{scene.name}}<p>
+      <p>Static Objects: {{scene.staticArr}}<p>
+      <p>Mobile Objects: {{scene.mobileArr}}<p>
+    </li>
+  </ul>
 </section>
