@@ -1,5 +1,10 @@
 <section class="drawSection">
-  <input ng-model="draw.sceneName" class="sceneName" placeholder="Scene Name">
+    <div class="canvasNames">
+      <label for="backgroundName">Background Name: </label>
+      <input ng-model="draw.backgroundName" placeholder="Background Name">
+      <label for="sceneName">Scene Name: </label>
+      <input ng-model="draw.sceneName" placeholder="Scene Name">
+    </div>
     <div class="leftOptions">
       <div class="option">
         <label for="colorPicker">Pick Color</label>
@@ -13,6 +18,18 @@
       <div class="option">
         <button class="saveCanvas">Save Canvas</button>
       </div>
+
+      <div class="option">
+        <button class="publishCanvas">Publish Canvas</button>
+      </div>
+
+      <div class="option">
+        <button class="saveBackground">Save Background</button>
+      </div>
+
+      <div class="option">
+        <button class="publishBackground">Publish Background</button>
+      </div>
     </div>
 
     <div class="canvasContainer">
@@ -20,6 +37,14 @@
     </div>
 
     <div class="rightOptions">
+      <div class="option">
+        <label for="widthRange">Pick Width: {{draw.widthRange}}</label>
+        <input ng-model="draw.widthRange" type="range" class="widthRange" min="3" max="700">
+        <label for="heightRange">Pick Height: {{draw.heightRange}}</label>
+        <input ng-model="draw.heightRange" type="range" class="heightRange" min="3" max="500">
+        <button class="backgroundDraw"> Draw Background </button>
+      </div>
+
       <div class="option">
         <label for="widthRange">Pick Width: {{draw.widthRange}}</label>
         <input ng-model="draw.widthRange" type="range" class="widthRange" min="3" max="700">

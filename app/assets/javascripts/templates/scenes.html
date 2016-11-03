@@ -3,12 +3,38 @@
 
   <button class="getScenesBtn">View All Scenes</button>
   <button class="deleteScenesBtn">Delete All Scenes</button>
+  <button class="getBackgroundsBtn">View All Backgrounds</button>
+  <button class="deleteBackgroundsBtn">Delete All Backgrounds</button>
 
+  <h1>Your Backgrounds</h1>
   <ul>
-    <li class="sceneOption" ng-click="scenes.selectScene(scene)" ng-repeat="scene in scenes.allScenes">
-      <p>Name: {{scene.name}}<p>
-      <p>Static Objects: {{scene.staticArr}}<p>
-      <p>Mobile Objects: {{scene.mobileArr}}<p>
+    <li class="backgroundOption" ng-click="scenes.selectBackground(background)" ng-repeat="background in scenes.userBackgrounds">
+      <p>Name: {{background.name}}</p>
+      <img src="{{background.thumbnail}}">
+    </li>
+  </ul>
+
+  <h1>Your Scenes</h1>
+  <ul>
+    <li class="sceneOption" ng-click="scenes.selectScene(scene)" ng-repeat="scene in scenes.userScenes">
+      <p>Name: {{scene.name}}</p>
+      <img src="{{scene.thumbnail}}">
+    </li>
+  </ul>
+
+  <h1>All Backgrounds</h1>
+  <ul>
+    <li class="backgroundOption" ng-click="scenes.selectBackground(background)" ng-repeat="background in scenes.publicBackgrounds">
+      <p>Name: {{background.name}}</p>
+      <img src="{{background.thumbnail}}">
+    </li>
+  </ul>
+
+  <h1>All Scenes</h1>
+  <ul>
+    <li class="sceneOption" ng-click="scenes.selectScene(scene)" ng-repeat="scene in scenes.publicScenes">
+      <p>Name: {{scene.name}}</p>
+      <img src="{{scene.thumbnail}}">
     </li>
   </ul>
 </section>

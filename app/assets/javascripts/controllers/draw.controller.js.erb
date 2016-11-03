@@ -1,10 +1,11 @@
-angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
+angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds, $state) {
   var self = this;
   this.drawTest = "This is where the HTML canvas would be for drawing.";
   this.radiusRange = 10;
   this.widthRange = 50;
   this.heightRange = 50;
   this.currentScene = Scenes.fetchCurrentScene() || {};
+  this.currentBackground = Backgrounds.fetchCurrentBackground() || {};
 
   var myCanvas = document.getElementById('myCanvas');
   this.canvasPos = {
@@ -32,6 +33,18 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
   this.allCircles = this.currentScene.mobileArr || [];
   this.allSquares = this.currentScene.staticArr || [];
 
+  this.backgroundName = this.currentBackground.name || '';
+  this.allBackgroundSquares = this.currentBackground.staticArr || [];
+
+  function constructBackgroundSquares() {
+    var oldBackgroundSquares = self.allBackgroundSquares;
+    var newBackgroundSquares = [];
+    oldBackgroundSquares.forEach(function(square) {
+      var newBackgroundSquare = new Square(square.x, square.y, square.width, square.height, square.color);
+      newBackgroundSquares.push(newBackgroundSquare);
+    });
+    self.allBackgroundSquares = newBackgroundSquares;
+  }
   function constructCircles() {
     var oldCircles = self.allCircles;
     var newCircles = [];
@@ -50,14 +63,17 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
     });
     self.allSquares = newSquares;
   }
+  constructBackgroundSquares();
   constructCircles();
   constructSquares();
+  drawBackgroundSquares();
   drawCircles();
   drawSquares();
 
   var drawing = {
     circles: false,
-    squares: true
+    squares: true,
+    background: false
   };
 
   function Square(x, y, width, height, color) {
@@ -122,6 +138,14 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
         var newSquare = new Square(mouseEvent.clientX - width / 2 - self.canvasPos.x, mouseEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
         newSquare.draw();
         self.allSquares.push(newSquare);
+        moved = false;
+      } else if (moved && drawing.background) {
+        var width = parseInt(self.widthRange);
+        var height = parseInt(self.heightRange);
+        var color = $('.colorPicker').val();
+        var newSquare = new Square(mouseEvent.clientX - width / 2 - self.canvasPos.x, mouseEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
+        newSquare.draw();
+        self.allBackgroundSquares.push(newSquare);
         moved = false;
       }
   }
@@ -220,6 +244,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
   function moveCircles() {
     if (moving.left && !findCollisions().left) {
       draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      drawBackgroundSquares();
       drawSquares();
       self.allCircles.forEach(function(circle) {
         circle.x -= moveSpeed;
@@ -227,6 +252,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
       });
     } else if (moving.right && !findCollisions().right) {
       draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      drawBackgroundSquares();
       drawSquares();
       self.allCircles.forEach(function(circle) {
         circle.x += moveSpeed;
@@ -234,6 +260,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
       });
     } else if (moving.up && !findCollisions().up) {
       draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      drawBackgroundSquares();
       drawSquares();
       self.allCircles.forEach(function(circle) {
         circle.y -= moveSpeed;
@@ -241,6 +268,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
       });
     } else if (moving.down && !findCollisions().down) {
       draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      drawBackgroundSquares();
       drawSquares();
       self.allCircles.forEach(function(circle) {
         circle.y += moveSpeed;
@@ -249,10 +277,11 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
     }
   }
 
-  function drawCircles() {
-    self.allCircles.forEach(function(circle) {
-      circle.draw();
-    });
+  function drawBackgroundSquares() {
+    for (var index = 0; index < self.allBackgroundSquares.length; index++) {
+      var square = self.allBackgroundSquares[index];
+      square.draw();
+    }
   }
 
   function drawSquares() {
@@ -262,17 +291,33 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
     }
   }
 
+  function drawCircles() {
+    self.allCircles.forEach(function(circle) {
+      circle.draw();
+    });
+  }
+
   $('.characterDraw').click(function() {
     drawing = {
       circles: true,
-      squares: false
+      squares: false,
+      background: false
     };
   });
 
   $('.objectDraw').click(function() {
     drawing = {
       circles: false,
-      squares: true
+      squares: true,
+      background: false
+    }
+  });
+
+  $('.backgroundDraw').click(function() {
+    drawing = {
+      circles: false,
+      squares: false,
+      background: true
     }
   });
 
@@ -282,13 +327,44 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, $state) {
     draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
   });
 
-  $('.saveCanvas').click(function() {
-    Scenes.create({
+  $('.saveScene').click(function() {
+    var newScene = Scenes.create({
       name: self.sceneName,
       staticArr: self.allSquares,
-      mobileArr: self.allCircles
+      mobileArr: self.allCircles,
+      thumbnail: myCanvas.toDataURL()
+    });
+    
+  });
+
+  $('.publishScene').click(function() {
+    var newScene = Scenes.create({
+      name: self.sceneName,
+      staticArr: self.allSquares,
+      mobileArr: self.allCircles,
+      thumbnail: myCanvas.toDataURL()
+    });
+    Scenes.publishScene(newScene);
+  });
+
+  $('.saveBackground').click(function() {
+    Backgrounds.create({
+      name: self.backgroundName,
+      staticArr: self.allBackgroundSquares,
+      thumbnail: myCanvas.toDataURL()
     });
   });
+
+  $('.publishBackground').click(function() {
+    var newBackground = Backgrounds.create({
+      name: self.backgroundName,
+      staticArr: self.allBackgroundSquares,
+      thumbnail: myCanvas.toDataURL()
+    });
+    Backgrounds.publishBackground(newBackground);
+  });
+
+
 
   $(document).on('keydown', handleKeyDown);
 

@@ -22,9 +22,13 @@ body {
 .scenesSection {
   position: relative;
   top: 100px;
-  .sceneOption {
-    margin: 20px 0;
+  .sceneOption, .backgroundOption {
+    margin: 20px;
     background: white;
+    width: 20%;
+    img {
+      width: 100%;
+    }
     &:hover {
       outline: 2px solid black;
     }
@@ -58,11 +62,15 @@ body {
   justify-content: center;
   width: 100vw;
   padding: 25px;
-  .sceneName {
+  .canvasNames {
     position: absolute;
     top: 0;
     padding: 5px;
     font-size: 25px;
+    input {
+      padding: 5px;
+      font-size: 20px;
+    }
   }
 }
 
@@ -84,7 +92,7 @@ body {
   .option {
     display: flex;
     flex-direction: column;
-    margin-bottom: 70px;
+    margin-bottom: 10px;
   }
 }
 
@@ -108,7 +116,7 @@ body {
   .option {
     display: flex;
     flex-direction: column;
-    margin-bottom: 70px;
+    margin-bottom: 20px;
   }
 }
 
