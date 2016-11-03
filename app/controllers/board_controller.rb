@@ -11,7 +11,7 @@ class BoardController < ApplicationController
   end
 
   def create
-    @scene = Scene.new(name: params[:name], data: params[:data]) # scene_params
+    @scene = Scene.new(name: params[:name], data: params[:data])
     if @scene.save
       render json: @scene
     else
@@ -31,7 +31,8 @@ class BoardController < ApplicationController
   private
 
   def scene_params
-    params.require(:name).permit(:data) # permit is optional and assumes nesting
+    # params.require(:scene).permit(:name, :data)
+    # permit is optional and assumes nesting
     # thing[:things], thing[:morethings]
   end
 end
