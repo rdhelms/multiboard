@@ -18,8 +18,11 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: multiboard
+  database: multiboard_test
 
 production:
   <<: *default
   database: multiboard
+
+
+# add suffix's for _dev _test databases so they aren't overwriting each other.

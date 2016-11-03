@@ -10,3 +10,22 @@ Background.create(
   name: 'dirt_path',
   code: File.binread(dirt_path)
 )
+
+Scene.create(
+  name: 'name',
+  data: "{ name: 'hi mom',
+  arrayOfStationaryObjects: [
+    {x,y,width,height},
+    {x,y,width,height},
+    {x,y,width,height},
+    {x,y,width,height}
+  ],
+  arrayOfMobileObjects: [
+    {x,y,radius},
+    {x,y,radius},
+    {x,y,radius},
+    {x,y,radius},
+    {x,y,radius}
+  ]
+  }"
+)

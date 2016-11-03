@@ -1,5 +1,3 @@
 class Background < ApplicationRecord
-  def initialize(name)
-    @name = name
-  end
+  has_many :scenes
 end
