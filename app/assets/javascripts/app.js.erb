@@ -9,13 +9,13 @@
             url: '/',
             abstract: true,
             template: '<ui-view></ui-view>'
-          }).state('board.login', {
+          }).state('board.scenes', {
             url: '',
-            templateUrl: 'login.html',
-            controller: 'loginCtrl as login'
+            templateUrl: 'scenes.html',
+            controller: 'scenesCtrl as scenes'
           }).state('board.draw', {
             url: 'draw',
-            templateUrl: 'board.html',
+            templateUrl: 'draw.html',
             controller: 'drawCtrl as draw'
           });
         });

@@ -1,0 +1,38 @@
+<section class="drawSection">
+  <input ng-model="draw.sceneName" class="sceneName" placeholder="Scene Name">
+    <div class="leftOptions">
+      <div class="option">
+        <label for="colorPicker">Pick Color</label>
+        <input class="colorPicker" type="color" value="#005500">
+      </div>
+
+      <div class="option">
+        <button class="clearCanvas">Clear Canvas</button>
+      </div>
+
+      <div class="option">
+        <button class="saveCanvas">Save Canvas</button>
+      </div>
+    </div>
+
+    <div class="canvasContainer">
+      <canvas id="myCanvas" width="700" height="500"></canvas>
+    </div>
+
+    <div class="rightOptions">
+      <div class="option">
+        <label for="widthRange">Pick Width: {{draw.widthRange}}</label>
+        <input ng-model="draw.widthRange" type="range" class="widthRange" min="3" max="700">
+        <label for="heightRange">Pick Height: {{draw.heightRange}}</label>
+        <input ng-model="draw.heightRange" type="range" class="heightRange" min="3" max="500">
+        <button class="objectDraw"> Draw Objects </button>
+      </div>
+
+      <div class="option">
+        <label for="radiusRange">Pick Radius: {{draw.radiusRange}}</label>
+        <input ng-model="draw.radiusRange" type="range" class="radiusRange" min="3" max="20">
+        <button class="characterDraw"> Draw Character </button>
+      </div>
+    </div>
+
+  </section>
