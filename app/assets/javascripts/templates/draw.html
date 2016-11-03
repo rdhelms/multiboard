@@ -21,17 +21,17 @@
 
     <div class="rightOptions">
       <div class="option">
-        <label for="sizeRadius">Pick Radius</label>
-        <input class="sizeRadius" type="number" value="15">
-        <button class="characterDraw"> Draw Character </button>
+        <label for="widthRange">Pick Width: {{draw.widthRange}}</label>
+        <input ng-model="draw.widthRange" type="range" class="widthRange" min="3" max="700">
+        <label for="heightRange">Pick Height: {{draw.heightRange}}</label>
+        <input ng-model="draw.heightRange" type="range" class="heightRange" min="3" max="500">
+        <button class="objectDraw"> Draw Objects </button>
       </div>
 
       <div class="option">
-        <label for="sizeWidth">Pick Width</label>
-        <input class="sizeWidth" type="number" value="140">
-        <label for="sizeHeight">Pick Height</label>
-        <input class="sizeHeight" type="number" value="100">
-        <button class="objectDraw"> Draw Objects </button>
+        <label for="radiusRange">Pick Radius: {{draw.radiusRange}}</label>
+        <input ng-model="draw.radiusRange" type="range" class="radiusRange" min="3" max="20">
+        <button class="characterDraw"> Draw Character </button>
       </div>
     </div>
 

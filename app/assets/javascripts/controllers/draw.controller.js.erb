@@ -1,9 +1,12 @@
 angular.module('multiboard').controller('drawCtrl', function($state) {
-
+  var self = this;
   this.drawTest = "This is where the HTML canvas would be for drawing.";
+  this.radiusRange = 10;
+  this.widthRange = 50;
+  this.heightRange = 50;
 
   var myCanvas = document.getElementById('myCanvas');
-  var canvasPos = {
+  this.canvasPos = {
     x: myCanvas.getBoundingClientRect().left,
     y: myCanvas.getBoundingClientRect().top
   };
@@ -77,18 +80,22 @@ angular.module('multiboard').controller('drawCtrl', function($state) {
   }
 
   function mousePressed() {
+      self.canvasPos = {
+        x: myCanvas.getBoundingClientRect().left,
+        y: myCanvas.getBoundingClientRect().top
+      };
       if (moved && drawing.circles) {
-        var radius = parseInt( $('.sizeRadius').val() ) || 15;
+        var radius = parseInt(self.radiusRange);
         var color = $('.colorPicker').val();
-        var newCircle = new Circle(mouseEvent.clientX - canvasPos.x, mouseEvent.clientY - canvasPos.y, radius, color);
+        var newCircle = new Circle(mouseEvent.clientX - self.canvasPos.x, mouseEvent.clientY - self.canvasPos.y, radius, color);
         newCircle.draw();
         allCircles.push(newCircle);
         moved = false;
       } else if (moved && drawing.squares) {
-        var width = parseInt( $('.sizeWidth').val() ) || 140;
-        var height = parseInt( $('.sizeHeight').val() ) || 100;
+        var width = parseInt(self.widthRange);
+        var height = parseInt(self.heightRange);
         var color = $('.colorPicker').val();
-        var newSquare = new Square(mouseEvent.clientX - width / 2 - canvasPos.x, mouseEvent.clientY - height / 2 - canvasPos.y, width, height, color);
+        var newSquare = new Square(mouseEvent.clientX - width / 2 - self.canvasPos.x, mouseEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
         newSquare.draw();
         allSquares.push(newSquare);
         moved = false;
