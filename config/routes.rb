@@ -4,7 +4,6 @@ Rails.application.routes.draw do
   get 'board/get'
 
   post "/board" => "board#create"
-  # post 'board/set'
 
   patch "/board/:id" => "board#update"
   #path has to indicate what you are updating
