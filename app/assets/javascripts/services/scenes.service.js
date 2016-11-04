@@ -1,6 +1,6 @@
 (function() {
   angular.module('multiboard').service('Scenes', function(Scene, localStorageService) {
-    
+
     function setScenes(scenes) {
       localStorageService.set('boardScenes', scenes);
     }
@@ -95,8 +95,8 @@
         case 'user':
           return getScenes('user');
           break;
-        case 'all':
-          return getScenes('all');
+        case 'public':
+          return getScenes('public');
           break;
       }
     };

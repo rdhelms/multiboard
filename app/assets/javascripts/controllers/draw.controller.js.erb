@@ -1,80 +1,60 @@
+// Controller for drawing board page.
+// App Name: multiboard
+// Controller Name: drawCtrl
+// Alias: draw
+// Dependencies:
+//  - Scenes Service: scenes.service.js
+//  - Backgrounds Service: backgrounds.service.js
+//  - $state from angular
 angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds, $state) {
-  var self = this;
-  this.drawTest = "This is where the HTML canvas would be for drawing.";
-  this.radiusRange = 10;
-  this.widthRange = 50;
-  this.heightRange = 50;
-  this.currentScene = Scenes.fetchCurrentScene() || {};
-  this.currentBackground = Backgrounds.fetchCurrentBackground() || {};
-
-  var myCanvas = document.getElementById('myCanvas');
-  this.canvasPos = {
-    x: myCanvas.getBoundingClientRect().left,
-    y: myCanvas.getBoundingClientRect().top
-  };
-  var draw = myCanvas.getContext('2d');
-
-  var blueCircleImg = document.createElement("img");
-  blueCircleImg.src = "<%= asset_path('bluecircle.png')%>";
-
-  var drawHandle = -1;
-  var moveHandle = -1;
-  var mouseEvent;
-  var moved = false;
-  var moveSpeed = 5;
-  var moving = {
+  var self = this;      // To help with scope issues
+  var drawHandle = -1;  // Interval handle for drawing rate
+  var moveHandle = -1;  // Interval handle for movement of mouse (possibly does not need to be global)
+  var mouseMoveEvent;       // Global variable to track mouse movement events
+  var moved = false;    // Whether mouse has moved or not
+  var moving = {        // Direction that the mobile objects should be moving.
     left: false,
     right: false,
     up: false,
     down: false
   };
-  var drawing = {
-    circles: false,
-    squares: false,
+  var drawing = {       // Type of object being drawn. Default: background.
+    mobile: false,
+    static: false,
     background: true
   };
+  this.speedRange = 5;     // How fast mobile objects should move.
+  this.radiusRange = 10;  // Value of radius input in draw.html
+  this.widthRangeBackground = 50;   // Value of width input in draw.html
+  this.heightRangeBackground = 50;  // Value of height input in draw.html
+  this.widthRangeObstacle = 50;     // Value of width input in draw.html
+  this.heightRangeObstacle = 50;    // Value of height input in draw.html
+  this.currentColor = "#005500";    // Value of color input in draw.html
+  this.currentScene = Scenes.fetchCurrentScene() || {}; // Scene selected from scenes controller
+  this.currentBackground = Backgrounds.fetchCurrentBackground() || {};  // Background selected from scenes controller
+  this.myCanvas = document.getElementById('myCanvas');  // Canvas html element
+  this.canvasPos = {    // Canvas top and left coordinates on page
+    x: self.myCanvas.getBoundingClientRect().left,
+    y: self.myCanvas.getBoundingClientRect().top
+  };
+  this.draw = this.myCanvas.getContext('2d'); // Canvas context
+  this.sceneName =  this.currentScene.name || '';       // Current selected Scene name
+  this.allMobileCircles = this.currentScene.mobileArr || [];  // Array of all mobile objects in current scene
+  this.allObstacleSquares = this.currentScene.staticArr || [];  // Array of all static objects in current scene
+  this.backgroundName = this.currentBackground.name || '';  // Current selected Background name
+  this.allBackgroundSquares = this.currentBackground.staticArr || []; // Array of all static objects in current background
 
-  this.sceneName =  this.currentScene.name || '';
-  this.allCircles = this.currentScene.mobileArr || [];
-  this.allSquares = this.currentScene.staticArr || [];
-
-  this.backgroundName = this.currentBackground.name || '';
-  this.allBackgroundSquares = this.currentBackground.staticArr || [];
-
-  function constructBackgroundSquares() {
-    var oldBackgroundSquares = self.allBackgroundSquares;
-    var newBackgroundSquares = [];
-    oldBackgroundSquares.forEach(function(square) {
-      var newBackgroundSquare = new Square(square.x, square.y, square.width, square.height, square.color);
-      newBackgroundSquares.push(newBackgroundSquare);
-    });
-    self.allBackgroundSquares = newBackgroundSquares;
-  }
-  function constructCircles() {
-    var oldCircles = self.allCircles;
-    var newCircles = [];
-    oldCircles.forEach(function(circle) {
-      var newCircle = new Circle(circle.x, circle.y, circle.radius, circle.color);
-      newCircles.push(newCircle);
-    });
-    self.allCircles = newCircles;
-  }
-  function constructSquares() {
-    var oldSquares = self.allSquares;
-    var newSquares = [];
-    oldSquares.forEach(function(square) {
-      var newSquare = new Square(square.x, square.y, square.width, square.height, square.color);
-      newSquares.push(newSquare);
-    });
-    self.allSquares = newSquares;
-  }
-  constructBackgroundSquares();
-  constructCircles();
-  constructSquares();
-  drawBackgroundSquares();
-  drawCircles();
-  drawSquares();
-
+  /*
+  *   Rectangle object constructor
+  *   @params
+  *     x: horizontal coord of top left corner
+  *     y: vertical coord of top left corner
+  *     width: width of rectangle
+  *     height: height of rectangle
+  *     color: color of rectangle
+  *   @methods
+  *     draw: draw the rectangle on the canvas using its position, size, and color.
+  */
   function Square(x, y, width, height, color) {
     this.x = x;
     this.y = y;
@@ -87,30 +67,42 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     }
   }
 
+  /*
+  *   Circle object constructor
+  *   @params
+  *     x: horizontal coord of center of circle
+  *     y: vertical coord of center of circle
+  *     radius: radius of circle
+  *     color: color of circle
+  *   @methods
+  *     draw: draw the circle on the canvas using its position, size, and color.
+  */
   function Circle(x, y, radius, color) {
     this.x = x;
     this.y = y;
     this.radius = radius;
     this.color = color;
     this.draw = function() {
-      // Can draw using an image.
-      // draw.drawImage(blueCircleImg, this.x, this.y, this.radius, this.radius);
-
-      // Can also draw using shapes.
       draw.beginPath();
       draw.fillStyle = this.color;
       draw.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
       draw.fill();
+      // Example for future reference: Can also draw using an image. Image should first be loaded on the page.
+      // draw.drawImage(imgElem, this.x, this.y, this.radius, this.radius);
     }
   }
 
-
+  // Called when the mouse button is pressed.
+  // Starts the interval to run every 100ms while the mouse button is still held down.
+  // Only start the interval if it is not already running.
   function mouseDown(event) {
     if (drawHandle === -1) {
       drawHandle = setInterval(mousePressed, 100);
     }
   }
 
+  // Called when the mouse button is released.
+  // If the interval is running, then clear it and reset it.
   function mouseUp(event) {
     if (drawHandle !== -1) {
       clearInterval(drawHandle);
@@ -118,46 +110,51 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     }
   }
 
+  // Runs every 100ms after the mouse button is pressed until it is released.
+  // Purpose is to draw the object that the user has chosen every 100ms AND if the mouse has moved from its previous location.
   function mousePressed() {
-      self.canvasPos = {
-        x: myCanvas.getBoundingClientRect().left,
-        y: myCanvas.getBoundingClientRect().top
+      self.canvasPos = {  // Get the most recent canvas position in case the window has been resized.
+        x: self.myCanvas.getBoundingClientRect().left,
+        y: self.myCanvas.getBoundingClientRect().top
       };
-      if (moved && drawing.circles) {
+      if (moved && drawing.mobile) { // Create, draw, and record a new mobile object
         var radius = parseInt(self.radiusRange);
-        var color = $('.colorPicker').val();
-        var newCircle = new Circle(mouseEvent.clientX - self.canvasPos.x, mouseEvent.clientY - self.canvasPos.y, radius, color);
+        var color = self.currentColor;
+        var newCircle = new Circle(mouseMoveEvent.clientX - self.canvasPos.x, mouseMoveEvent.clientY - self.canvasPos.y, radius, color);
         newCircle.draw();
-        self.allCircles.push(newCircle);
+        self.allMobileCircles.push(newCircle);
         moved = false;
-      } else if (moved && drawing.squares) {
-        var width = parseInt(self.widthRange);
-        var height = parseInt(self.heightRange);
-        var color = $('.colorPicker').val();
-        var newSquare = new Square(mouseEvent.clientX - width / 2 - self.canvasPos.x, mouseEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
+      } else if (moved && drawing.static) {  // Create, draw, and record a new static object
+        var width = parseInt(self.widthRangeObstacle);
+        var height = parseInt(self.heightRangeObstacle);
+        var color = self.currentColor;
+        var newSquare = new Square(mouseMoveEvent.clientX - width / 2 - self.canvasPos.x, mouseMoveEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
         newSquare.draw();
-        self.allSquares.push(newSquare);
+        self.allObstacleSquares.push(newSquare);
         moved = false;
-      } else if (moved && drawing.background) {
-        var width = parseInt(self.widthRange);
-        var height = parseInt(self.heightRange);
-        var color = $('.colorPicker').val();
-        var newSquare = new Square(mouseEvent.clientX - width / 2 - self.canvasPos.x, mouseEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
+      } else if (moved && drawing.background) { // Create, draw, and record a new background object
+        var width = parseInt(self.widthRangeBackground);
+        var height = parseInt(self.heightRangeBackground);
+        var color = self.currentColor;
+        var newSquare = new Square(mouseMoveEvent.clientX - width / 2 - self.canvasPos.x, mouseMoveEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
         newSquare.draw();
         self.allBackgroundSquares.push(newSquare);
         moved = false;
       }
   }
 
+  // Check for collisions between all of the mobile objects and all of the obstacle objects.
+  // The collision is categorized according to which direction the obstacle is found.
   function findCollisions() {
-    var foundCollision = {
+    var foundCollision = {  // By default, there is no collision found in any direction.
       left: false,
       right: false,
       up: false,
       down: false
     };
-    self.allCircles.forEach(function(circle) {
-      self.allSquares.forEach(function(square) {
+    self.allMobileCircles.forEach(function(circle) {  // Loop through all the mobile objects
+      self.allObstacleSquares.forEach(function(square) {  // Loop through all the obstacle objects
+        // Pattern: check the left, right, top, and bottom edges of the current mobile object against the right, left, bottom, and top edges of the current obstacle (in those exact orders).
         if (circle.x - circle.radius <= square.x + square.width && circle.x - circle.radius >= square.x && circle.y >= square.y && circle.y <= square.y + square.height) {
           foundCollision.left = true;
           moving.left = false;
@@ -175,11 +172,12 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
           moving.down = false;
         }
       });
+      // Check for collisions with the canvas border as well.
       if (circle.x <= 0) {
         foundCollision.left = true;
         moving.left = false;
       }
-      if (circle.x >= myCanvas.width) {
+      if (circle.x >= self.myCanvas.width) {
         foundCollision.right = true;
         moving.right = false;
       }
@@ -187,7 +185,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
         foundCollision.up = true;
         moving.up = false;
       }
-      if (circle.y >= myCanvas.height) {
+      if (circle.y >= self.myCanvas.height) {
         foundCollision.down = true;
         moving.down = false;
       }
@@ -195,36 +193,38 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     return foundCollision;
   }
 
+  // Called when any key is pressed.
   function handleKeyDown(event) {
-    if (event.keyCode === 37) {
+    // If the user presses the left, right, up, or down arrow keys, toggle the movement direction accordingly
+    if (event.keyCode === 37) { // Left Key
       moving = {
         left: !moving.left,
         up: false,
         right: false,
         down: false
       };
-    } else if (event.keyCode === 38) {
+    } else if (event.keyCode === 38) { // Up Key
       moving = {
         left: false,
         up: !moving.up,
         right: false,
         down: false
       };
-    } else if (event.keyCode === 39) {
+    } else if (event.keyCode === 39) { // Right Key
       moving = {
         left: false,
         up: false,
         right: !moving.right,
         down: false
       };
-    } else if (event.keyCode === 40) {
+    } else if (event.keyCode === 40) { // Down Key
       moving = {
         left: false,
         up: false,
         right: false,
         down: !moving.down
       };
-    } else {
+    } else {    // For all other keys, stop all movement.
       moving = {
         left: false,
         up: false,
@@ -232,50 +232,60 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
         down: false
       }
     }
+    // If any of the arrow keys have been pressed, run the moveMobileCircles function every 20ms.
+    // Otherwise, stop running the moveMobileCircles function.
     if ( moving.left || moving.up || moving.right || moving.down ) {
       clearInterval(moveHandle);
-      moveHandle = setInterval(moveCircles, 20);
+      moveHandle = setInterval(moveMobileCircles, 20);
     } else {
       clearInterval(moveHandle);
     }
   }
 
-  function moveCircles() {
+  // Runs every 20ms after an arrow key has been pressed.
+  function moveMobileCircles() {
+    // Depending on movement direction and collision detection, do the following:
+    // 1) Clear the canvas.
+    // 2) Redraw background and obstacle objects.
+    // 3) Shift the circles in the corresponding direction.
+    // 4) Redraw the circles.
+    // Note: Checking collision detection and checking movement direction may be redundant.
     if (moving.left && !findCollisions().left) {
-      draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
       drawBackgroundSquares();
-      drawSquares();
-      self.allCircles.forEach(function(circle) {
-        circle.x -= moveSpeed;
+      drawObstacleSquares();
+      self.allMobileCircles.forEach(function(circle) {
+        circle.x -= self.speedRange;
         circle.draw();
       });
     } else if (moving.right && !findCollisions().right) {
-      draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
       drawBackgroundSquares();
-      drawSquares();
-      self.allCircles.forEach(function(circle) {
-        circle.x += moveSpeed;
+      drawObstacleSquares();
+      self.allMobileCircles.forEach(function(circle) {
+        circle.x += self.speedRange;
         circle.draw();
       });
     } else if (moving.up && !findCollisions().up) {
-      draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
       drawBackgroundSquares();
-      drawSquares();
-      self.allCircles.forEach(function(circle) {
-        circle.y -= moveSpeed;
+      drawObstacleSquares();
+      self.allMobileCircles.forEach(function(circle) {
+        circle.y -= self.speedRange;
         circle.draw();
       });
     } else if (moving.down && !findCollisions().down) {
-      draw.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
       drawBackgroundSquares();
-      drawSquares();
-      self.allCircles.forEach(function(circle) {
-        circle.y += moveSpeed;
+      drawObstacleSquares();
+      self.allMobileCircles.forEach(function(circle) {
+        circle.y += self.speedRange;
         circle.draw();
       });
     }
   }
 
+  // Loop through the array of background objects and draw them all.
   function drawBackgroundSquares() {
     for (var index = 0; index < self.allBackgroundSquares.length; index++) {
       var square = self.allBackgroundSquares[index];
@@ -283,101 +293,183 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     }
   }
 
-  function drawSquares() {
-    for (var index = 0; index < self.allSquares.length; index++) {
-      var square = self.allSquares[index];
+  // Loop through the array of obstacle objects and draw them all.
+  function drawObstacleSquares() {
+    for (var index = 0; index < self.allObstacleSquares.length; index++) {
+      var square = self.allObstacleSquares[index];
       square.draw();
     }
   }
 
-  function drawCircles() {
-    self.allCircles.forEach(function(circle) {
+  // Loop through the array of mobile objects and draw them all.
+  function drawMobileCircles() {
+    for (var index = 0; index < self.allMobileCircles.length; index++) {
+      var circle = self.allMobileCircles[index];
       circle.draw();
-    });
+    }
   }
 
+  // When the Draw Character button is clicked, change the drawing setting to mobile.
   $('.characterDraw').click(function() {
     drawing = {
-      circles: true,
-      squares: false,
+      mobile: true,
+      static: false,
       background: false
     };
   });
 
+  // When the Draw Obstacles button is clicked, change the drawing setting to static.
   $('.objectDraw').click(function() {
     drawing = {
-      circles: false,
-      squares: true,
+      mobile: false,
+      static: true,
       background: false
     }
   });
 
+  // When the Draw Background button is clicked, change the drawing setting to background.
   $('.backgroundDraw').click(function() {
     drawing = {
-      circles: false,
-      squares: false,
+      mobile: false,
+      static: false,
       background: true
     }
   });
 
+  // When the Clear Canvas button is clicked, make the current Background and current Scene empty objects and reload the view.
+  // Note: may need extra testing here.
   $('.clearCanvas').click(function() {
-    // self.allSquares = [];
-    // self.allCircles = [];
+    // self.allObstacleSquares = [];
+    // self.allMobileCircles = [];
     // self.allBackgroundSquares = [];
     Scenes.selectScene({})
     Backgrounds.selectBackground({});
     $state.reload();
   });
 
+  // When the Save Scene button is clicked:
+  // 1) Clear the canvas and redraw only the Obstacles and Character. (ensures thumbnail is scene ONLY)
+  // 2) Create and store a new scene object and make it the current Scene.
+  // 3) Clear the canvas again and this time redraw Background, Obstacles, and Character.
   $('.saveScene').click(function() {
-    console.log("Saving scene!");
+    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    drawObstacleSquares();
+    drawMobileCircles();
     var newScene = Scenes.create({
       name: self.sceneName,
-      staticArr: self.allSquares,
-      mobileArr: self.allCircles,
-      thumbnail: myCanvas.toDataURL()
+      staticArr: self.allObstacleSquares,
+      mobileArr: self.allMobileCircles,
+      thumbnail: self.myCanvas.toDataURL()
     });
     Scenes.selectScene(newScene);
+    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    drawBackgroundSquares();
+    drawObstacleSquares();
+    drawMobileCircles();
   });
 
+  // When the Publish Scene button is clicked, do the same as Save Scene AND post it to the database.
   $('.publishScene').click(function() {
+    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    drawObstacleSquares();
+    drawMobileCircles();
     var newScene = Scenes.create({
       name: self.sceneName,
-      staticArr: self.allSquares,
-      mobileArr: self.allCircles,
-      thumbnail: myCanvas.toDataURL()
+      staticArr: self.allObstacleSquares,
+      mobileArr: self.allMobileCircles,
+      thumbnail: self.myCanvas.toDataURL()
     });
+    Scenes.selectScene(newScene);
+    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    drawBackgroundSquares();
+    drawObstacleSquares();
+    drawMobileCircles();
     Scenes.publishScene(newScene);
   });
 
+  // When the Save Background button is clicked:
+  // 1) Clear the canvas and redraw only the Background. (ensures thumbnail is background ONLY)
+  // 2) Create and store a new background object and make it the current Background.
+  // 3) Finally, draw the Obstacles and Character.
   $('.saveBackground').click(function() {
+    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    drawBackgroundSquares();
     var newBackground = Backgrounds.create({
       name: self.backgroundName,
       staticArr: self.allBackgroundSquares,
-      thumbnail: myCanvas.toDataURL()
+      thumbnail: self.myCanvas.toDataURL()
     });
     Backgrounds.selectBackground(newBackground);
+    drawObstacleSquares();
+    drawMobileCircles();
   });
 
+  // When the Publish Background button is clicked, do the same as Save Background AND post it to the database.
   $('.publishBackground').click(function() {
+    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    drawBackgroundSquares();
     var newBackground = Backgrounds.create({
       name: self.backgroundName,
       staticArr: self.allBackgroundSquares,
-      thumbnail: myCanvas.toDataURL()
+      thumbnail: self.myCanvas.toDataURL()
     });
+    Backgrounds.selectBackground(newBackground);
+    drawObstacleSquares();
+    drawMobileCircles();
     Backgrounds.publishBackground(newBackground);
   });
 
-
-
+  // When a key is pressed, run the handleKeyDown function.
   $(document).on('keydown', handleKeyDown);
 
-  $(myCanvas).on('mousedown', mouseDown);
-  $(myCanvas).on('mouseup', mouseUp);
-  $(myCanvas).on('mouseleave', mouseUp);
-  $(myCanvas).on('mousemove', function(event) {
-    mouseEvent = event;
+  // When the mouse is pressed, released, moved, or leaves the canvas, run the corresponding function.
+  $(self.myCanvas).on('mousedown', mouseDown);
+  $(self.myCanvas).on('mouseup', mouseUp);
+  $(self.myCanvas).on('mouseleave', mouseUp);
+  $(self.myCanvas).on('mousemove', function(event) {
+    mouseMoveEvent = event;
     moved = true;
   });
+
+  // Construct initial full background objects (including methods) from the retrieved partial objects.
+  // Idea - offload object methods to prototype? Possibly make this step unnecessary?
+  function constructBackgroundSquares() {
+    var oldBackgroundSquares = self.allBackgroundSquares;
+    var newBackgroundSquares = [];
+    oldBackgroundSquares.forEach(function(square) {
+      var newBackgroundSquare = new Square(square.x, square.y, square.width, square.height, square.color);
+      newBackgroundSquares.push(newBackgroundSquare);
+    });
+    self.allBackgroundSquares = newBackgroundSquares;
+  }
+  // Construct mobile objects just like background objects.
+  function constructCircles() {
+    var oldCircles = self.allMobileCircles;
+    var newCircles = [];
+    oldCircles.forEach(function(circle) {
+      var newCircle = new Circle(circle.x, circle.y, circle.radius, circle.color);
+      newCircles.push(newCircle);
+    });
+    self.allMobileCircles = newCircles;
+  }
+  // Construct static objects just like background and mobile objects.
+  function constructSquares() {
+    var oldSquares = self.allObstacleSquares;
+    var newSquares = [];
+    oldSquares.forEach(function(square) {
+      var newSquare = new Square(square.x, square.y, square.width, square.height, square.color);
+      newSquares.push(newSquare);
+    });
+    self.allObstacleSquares = newSquares;
+  }
+
+  // Call all object constructing functions.
+  constructBackgroundSquares();
+  constructCircles();
+  constructSquares();
+  // Draw all the objects now that they have been made.
+  drawBackgroundSquares();
+  drawMobileCircles();
+  drawObstacleSquares();
 
 });
