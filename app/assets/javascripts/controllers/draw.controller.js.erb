@@ -330,6 +330,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   });
 
   $('.saveScene').click(function() {
+    console.log("Saving scene!");
     var newScene = Scenes.create({
       name: self.sceneName,
       staticArr: self.allSquares,
