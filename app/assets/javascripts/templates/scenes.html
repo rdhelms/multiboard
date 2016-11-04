@@ -1,45 +1,58 @@
 <section class="scenesSection">
 
-  <div class="sceneControlButtons">
-    <button class="getUserScenesBtn" ng-click="scenes.getUserScenes()">View Your Scenes</button>
-    <button class="deleteUserScenesBtn" ng-click="scenes.deleteUserScenes()">Delete Your Scenes</button>
-    <button class="getUserBackgroundsBtn" ng-click="scenes.getUserBackgrounds()">View Your Backgrounds</button>
-    <button class="deleteBackgroundsBtn" ng-click="scenes.deleteUserBackgrounds()">Delete Your Backgrounds</button>
-  </div>
+  <div class="scenesBackgrounds">
+    <div class="userContainer">
+      <div class="sceneControlButtons">
+        <button class="deleteBackgroundsBtn" ng-click="scenes.deleteUserBackgrounds()">Delete Your Backgrounds</button>
+        <button class="deleteUserScenesBtn" ng-click="scenes.deleteUserScenes()">Delete Your Scenes</button>
+      </div>
 
-  <div class="userScenesBackgrounds">
-    <h1>Your Backgrounds</h1>
-    <ul>
-      <li class="backgroundOption" ng-cloak ng-click="scenes.selectBackground(background)" ng-repeat="background in scenes.userBackgrounds">
-        <p>Name: {{background.name}}</p>
-        <img src="{{background.thumbnail}}">
-      </li>
-    </ul>
+      <div class="userScenesBackgrounds">
+        <div class="userBackgrounds">
+          <h1>Your Backgrounds</h1>
+          <ul>
+            <li class="backgroundOption" ng-cloak ng-click="scenes.selectBackground(background)" ng-repeat="background in scenes.userBackgrounds">
+              <p>Name: {{background.name}}</p>
+              <img src="{{background.thumbnail}}">
+            </li>
+          </ul>
+        </div>
 
-    <h1>Your Scenes</h1>
-    <ul>
-      <li class="sceneOption" ng-cloak ng-click="scenes.selectScene(scene)" ng-repeat="scene in scenes.userScenes">
-        <p>Name: {{scene.name}}</p>
-        <img src="{{scene.thumbnail}}">
-      </li>
-    </ul>
-  </div>
+        <div class="userScenes">
+          <h1>Your Scenes</h1>
+          <ul>
+            <li class="sceneOption" ng-cloak ng-click="scenes.selectScene(scene)" ng-repeat="scene in scenes.userScenes">
+              <p>Name: {{scene.name}}</p>
+              <img src="{{scene.thumbnail}}">
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-  <div class="publicScenesBackgrounds">
-    <h1>All Backgrounds</h1>
-    <ul>
-      <li class="backgroundOption" ng-cloak ng-click="scenes.selectBackground(background)" ng-repeat="background in scenes.publicBackgrounds">
-        <p>Name: {{background.name}}</p>
-        <img src="{{background.thumbnail}}">
-      </li>
-    </ul>
+    <div class="publicContainer">
+      <div class="publicControlButtons"> </div>
+      <div class="publicScenesBackgrounds">
+        <div class="publicBackgrounds">
+          <h1>All Backgrounds</h1>
+          <ul>
+            <li class="backgroundOption" ng-cloak ng-click="scenes.selectBackground(background)" ng-repeat="background in scenes.publicBackgrounds">
+              <p>Name: {{background.name}}</p>
+              <img src="{{background.thumbnail}}">
+            </li>
+          </ul>
+        </div>
 
-    <h1>All Scenes</h1>
-    <ul>
-      <li class="sceneOption" ng-cloak ng-click="scenes.selectScene(scene)" ng-repeat="scene in scenes.publicScenes">
-        <p>Name: {{scene.name}}</p>
-        <img src="{{scene.thumbnail}}">
-      </li>
-    </ul>
+        <div class="publicScenes">
+          <h1>All Scenes</h1>
+          <ul>
+            <li class="sceneOption" ng-cloak ng-click="scenes.selectScene(scene)" ng-repeat="scene in scenes.publicScenes">
+              <p>Name: {{scene.name}}</p>
+              <img src="{{scene.thumbnail}}">
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </section>

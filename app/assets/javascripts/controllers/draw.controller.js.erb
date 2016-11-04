@@ -368,22 +368,23 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     drawMobileCircles();
   });
 
-  // When the Publish Scene button is clicked, do the same as Save Scene AND post it to the database.
+  // When the Publish Scene button is clicked, post it to the database.
   $('.publishScene').click(function() {
-    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
-    drawObstacleSquares();
-    drawMobileCircles();
-    var newScene = Scenes.create({
-      name: self.sceneName,
-      staticArr: self.allObstacleSquares,
-      mobileArr: self.allMobileCircles,
-      thumbnail: self.myCanvas.toDataURL()
-    });
-    Scenes.selectScene(newScene);
-    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
-    drawBackgroundSquares();
-    drawObstacleSquares();
-    drawMobileCircles();
+    // Trying to decide whether to save AND publish or just publish...
+    // self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    // drawObstacleSquares();
+    // drawMobileCircles();
+    // var newScene = Scenes.create({
+    //   name: self.sceneName,
+    //   staticArr: self.allObstacleSquares,
+    //   mobileArr: self.allMobileCircles,
+    //   thumbnail: self.myCanvas.toDataURL()
+    // });
+    // Scenes.selectScene(newScene);
+    // self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    // drawBackgroundSquares();
+    // drawObstacleSquares();
+    // drawMobileCircles();
     Scenes.publishScene(newScene);
   });
 
@@ -404,18 +405,19 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     drawMobileCircles();
   });
 
-  // When the Publish Background button is clicked, do the same as Save Background AND post it to the database.
+  // When the Publish Background button is clicked, post it to the database.
   $('.publishBackground').click(function() {
-    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
-    drawBackgroundSquares();
-    var newBackground = Backgrounds.create({
-      name: self.backgroundName,
-      staticArr: self.allBackgroundSquares,
-      thumbnail: self.myCanvas.toDataURL()
-    });
-    Backgrounds.selectBackground(newBackground);
-    drawObstacleSquares();
-    drawMobileCircles();
+    // Trying to decide whether to save AND publish or just publish...
+    // self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    // drawBackgroundSquares();
+    // var newBackground = Backgrounds.create({
+    //   name: self.backgroundName,
+    //   staticArr: self.allBackgroundSquares,
+    //   thumbnail: self.myCanvas.toDataURL()
+    // });
+    // Backgrounds.selectBackground(newBackground);
+    // drawObstacleSquares();
+    // drawMobileCircles();
     Backgrounds.publishBackground(newBackground);
   });
 
