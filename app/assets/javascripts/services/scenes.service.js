@@ -1,6 +1,8 @@
 (function() {
   angular.module('multiboard').service('Scenes', function(Scene, localStorageService) {
 
+    var self = this;
+
     function setScenes(scenes) {
       localStorageService.set('boardScenes', scenes);
     }
@@ -11,8 +13,26 @@
           return localStorageService.get('boardScenes') || [];
           break;
         case 'public':
-          return getPublicScenes() || [];
+          return self.getPublicScenes() || [];
       }
+    }
+
+    function getCurrentScene() {
+      return localStorageService.get('currentScene') || {};
+    }
+
+    function setCurrentScene(scene) {
+      localStorageService.set('currentScene', scene);
+    }
+
+    function findSceneById(scenesOld, idToFind) {
+      var sceneFound;
+      scenesOld.forEach(function(sceneOld) {
+        if (sceneOld.id === idToFind) {
+          sceneFound = sceneOld;
+        }
+      });
+      return sceneFound;
     }
 
     this.getPublicSceneByName = function(name) {
@@ -67,24 +87,6 @@
           console.log(error);
         }
       });
-    }
-
-    function getCurrentScene() {
-      return localStorageService.get('currentScene') || {};
-    }
-
-    function setCurrentScene(scene) {
-      localStorageService.set('currentScene', scene);
-    }
-
-    function findSceneById(scenesOld, idToFind) {
-      var sceneFound;
-      scenesOld.forEach(function(sceneOld) {
-        if (sceneOld.id === idToFind) {
-          sceneFound = sceneOld;
-        }
-      });
-      return sceneFound;
     }
 
     this.updateScenes = function(scenes) {

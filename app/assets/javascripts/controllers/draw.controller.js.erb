@@ -24,7 +24,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     background: true
   };
   this.speedRange = 5;     // How fast mobile objects should move.
-  this.radiusRange = 10;  // Value of radius input in draw.html
+  this.radiusRange = 5;  // Value of radius input in draw.html
   this.widthRangeBackground = 50;   // Value of width input in draw.html
   this.heightRangeBackground = 50;  // Value of height input in draw.html
   this.widthRangeObstacle = 50;     // Value of width input in draw.html
@@ -62,8 +62,8 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     this.height = height;
     this.color = color;
     this.draw = function() {
-      draw.fillStyle = this.color;
-      draw.fillRect(this.x, this.y, this.width, this.height);
+      self.draw.fillStyle = this.color;
+      self.draw.fillRect(this.x, this.y, this.width, this.height);
     }
   }
 
@@ -83,10 +83,10 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     this.radius = radius;
     this.color = color;
     this.draw = function() {
-      draw.beginPath();
-      draw.fillStyle = this.color;
-      draw.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-      draw.fill();
+      self.draw.beginPath();
+      self.draw.fillStyle = this.color;
+      self.draw.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+      self.draw.fill();
       // Example for future reference: Can also draw using an image. Image should first be loaded on the page.
       // draw.drawImage(imgElem, this.x, this.y, this.radius, this.radius);
     }
@@ -251,35 +251,35 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     // 4) Redraw the circles.
     // Note: Checking collision detection and checking movement direction may be redundant.
     if (moving.left && !findCollisions().left) {
-      draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+      self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
       drawBackgroundSquares();
       drawObstacleSquares();
       self.allMobileCircles.forEach(function(circle) {
-        circle.x -= self.speedRange;
+        circle.x -= parseInt(self.speedRange);
         circle.draw();
       });
     } else if (moving.right && !findCollisions().right) {
-      draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+      self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
       drawBackgroundSquares();
       drawObstacleSquares();
       self.allMobileCircles.forEach(function(circle) {
-        circle.x += self.speedRange;
+        circle.x += parseInt(self.speedRange);
         circle.draw();
       });
     } else if (moving.up && !findCollisions().up) {
-      draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+      self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
       drawBackgroundSquares();
       drawObstacleSquares();
       self.allMobileCircles.forEach(function(circle) {
-        circle.y -= self.speedRange;
+        circle.y -= parseInt(self.speedRange);
         circle.draw();
       });
     } else if (moving.down && !findCollisions().down) {
-      draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+      self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
       drawBackgroundSquares();
       drawObstacleSquares();
       self.allMobileCircles.forEach(function(circle) {
-        circle.y += self.speedRange;
+        circle.y += parseInt(self.speedRange);
         circle.draw();
       });
     }
@@ -352,7 +352,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   // 2) Create and store a new scene object and make it the current Scene.
   // 3) Clear the canvas again and this time redraw Background, Obstacles, and Character.
   $('.saveScene').click(function() {
-    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
     drawObstacleSquares();
     drawMobileCircles();
     var newScene = Scenes.create({
@@ -362,7 +362,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
       thumbnail: self.myCanvas.toDataURL()
     });
     Scenes.selectScene(newScene);
-    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
     drawBackgroundSquares();
     drawObstacleSquares();
     drawMobileCircles();
@@ -370,7 +370,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
 
   // When the Publish Scene button is clicked, do the same as Save Scene AND post it to the database.
   $('.publishScene').click(function() {
-    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
     drawObstacleSquares();
     drawMobileCircles();
     var newScene = Scenes.create({
@@ -380,7 +380,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
       thumbnail: self.myCanvas.toDataURL()
     });
     Scenes.selectScene(newScene);
-    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
     drawBackgroundSquares();
     drawObstacleSquares();
     drawMobileCircles();
@@ -392,7 +392,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   // 2) Create and store a new background object and make it the current Background.
   // 3) Finally, draw the Obstacles and Character.
   $('.saveBackground').click(function() {
-    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
     drawBackgroundSquares();
     var newBackground = Backgrounds.create({
       name: self.backgroundName,
@@ -406,7 +406,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
 
   // When the Publish Background button is clicked, do the same as Save Background AND post it to the database.
   $('.publishBackground').click(function() {
-    draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
     drawBackgroundSquares();
     var newBackground = Backgrounds.create({
       name: self.backgroundName,
