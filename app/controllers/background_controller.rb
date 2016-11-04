@@ -13,7 +13,7 @@ class BackgroundController < ApplicationController
   end
 
   def create
-    @background = Background.new(name: params[:name], data: params[:data])
+    @background = Background.new(name: params[:name], img: params[:img])
     if @background.save
       render json: @background
     else
@@ -23,7 +23,7 @@ class BackgroundController < ApplicationController
 
   def update
     @background = Background.find(params[:id])
-    if @background.update(data: params[:data])
+    if @background.update(img: params[:img])
       render json: @background
     else
       render_error @background.errors.full_messages
