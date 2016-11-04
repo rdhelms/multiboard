@@ -11,12 +11,26 @@
   padding: 0;
 }
 
-button {
-  outline-style: none;
-}
-
 body {
   background: url("<%= asset_path('purty_wood.png')%>");
+}
+
+header {
+  h1 {
+    font-size: 3vw;
+  }
+  button {
+    outline-style: none;
+    padding: 10px;
+    font-size: 1.5vw;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 5px 5px 20px #333;
+    transition: all .2s ease;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 }
 
 .scenesSection {
@@ -47,6 +61,13 @@ body {
         button {
           padding: 10px;
           font-size: 1.5vw;
+          border-radius: 10px;
+          background: white;
+          box-shadow: 5px 5px 20px #333;
+          transition: all .2s ease;
+          &:hover {
+            transform: scale(1.1);
+          }
         }
       }
       .userScenesBackgrounds, .publicScenesBackgrounds {
