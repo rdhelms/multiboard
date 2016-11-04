@@ -33,6 +33,7 @@
         url: "background/index",
         method: "GET",
         success: function(response) {
+          encodeURIComponent(JSON.parse(response));
           console.log(response);
         },
         error: function(error) {
@@ -42,14 +43,19 @@
     }
 
     this.publishBackground = function(background) {
+
+      var backArr = background.staticArr;
+
+      var imageArr = [];
+      backArr.forEach(function(object) {
+        imageArr.push(encodeURIComponent(JSON.stringify(object)));
+      });
+
       $.ajax({
-        url: "background/create?name=" + background.name + "&img=" + background.staticArr,
+        url: "background/create?name=" + background.name + "&img=" + imageArr,
         method: "POST",
         data: background,
         success: function(response) {
-          console.log(background.staticArr);
-
-          //This is wired up. Jus tneed to add the img data to the url - which is the array of objects.
         },
         error: function(error) {
           console.log(error);
