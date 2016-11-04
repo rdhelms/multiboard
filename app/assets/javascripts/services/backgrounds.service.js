@@ -15,12 +15,12 @@
       }
     }
 
-    getPublicBackgroundByName = function(name) {
+    self.getPublicBackgroundByName = function(name) {
       $.ajax({
-        url: "board/get?name=" + name,
+        url: "background/get?name=" + name,
         method: "GET",
         success: function(response) {
-          return response;
+          console.log(response);
         },
         error: function(error) {
           return error;
@@ -28,12 +28,12 @@
       });
     }
 
-    getPublicBackgrounds = function() {
+    self.getPublicBackgrounds = function() {
       $.ajax({
-        url: "board/get",
+        url: "background/index",
         method: "GET",
         success: function(response) {
-          return response;
+          console.log(response);
         },
         error: function(error) {
           return error;
@@ -41,13 +41,15 @@
       });
     }
 
-    publishBackground = function(background) {
+    this.publishBackground = function(background) {
       $.ajax({
-        url: "board?name=" + background.name,
+        url: "background/create?name=" + background.name + "&img=" + background.staticArr,
         method: "POST",
         data: background,
         success: function(response) {
-          console.log(response);
+          console.log(background.staticArr);
+
+          //This is wired up. Jus tneed to add the img data to the url - which is the array of objects.
         },
         error: function(error) {
           console.log(error);
@@ -55,10 +57,10 @@
       });
     }
 
-    updateBackground = function(background) {
+    self.updateBackground = function(background) {
       $.ajax({
-        url: "board?name=" + background.name,
-        method: "POST",
+        url: "background/update?=" + background.id,
+        method: "PATCH",
         data: background,
         success: function(response) {
           console.log(response);
