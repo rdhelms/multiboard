@@ -8,7 +8,7 @@
     <div class="leftOptions">
       <div class="option">
         <label for="colorPicker">Pick Color</label>
-        <input class="colorPicker" type="color" value="#005500">
+        <input ng-model="draw.currentColor" class="colorPicker" type="color">
       </div>
 
       <div class="option">
@@ -38,22 +38,24 @@
 
     <div class="rightOptions">
       <div class="option">
-        <label for="widthRange">Pick Width: {{draw.widthRange}}</label>
-        <input ng-model="draw.widthRange" type="range" class="widthRange" min="3" max="700">
-        <label for="heightRange">Pick Height: {{draw.heightRange}}</label>
-        <input ng-model="draw.heightRange" type="range" class="heightRange" min="3" max="500">
+        <label for="widthRange">Pick Width: {{draw.widthRangeBackground}}</label>
+        <input ng-model="draw.widthRangeBackground" type="range" class="widthRangeBackground" min="3" max="700">
+        <label for="heightRange">Pick Height: {{draw.heightRangeBackground}}</label>
+        <input ng-model="draw.heightRangeBackground" type="range" class="heightRangeBackground" min="3" max="500">
         <button class="backgroundDraw"> Draw Background </button>
       </div>
 
       <div class="option">
-        <label for="widthRange">Pick Width: {{draw.widthRange}}</label>
-        <input ng-model="draw.widthRange" type="range" class="widthRange" min="3" max="700">
-        <label for="heightRange">Pick Height: {{draw.heightRange}}</label>
-        <input ng-model="draw.heightRange" type="range" class="heightRange" min="3" max="500">
-        <button class="objectDraw"> Draw Objects </button>
+        <label for="widthRange">Pick Width: {{draw.widthRangeObstacle}}</label>
+        <input ng-model="draw.widthRangeObstacle" type="range" class="widthRangeObstacle" min="3" max="700">
+        <label for="heightRange">Pick Height: {{draw.heightRangeObstacle}}</label>
+        <input ng-model="draw.heightRangeObstacle" type="range" class="heightRangeObstacle" min="3" max="500">
+        <button class="objectDraw"> Draw Obstacles </button>
       </div>
 
       <div class="option">
+        <label for="speedRange">Pick Speed: {{draw.speedRange}}</label>
+        <input ng-model="draw.speedRange" type="range" class="speedRange" min="3" max="20">
         <label for="radiusRange">Pick Radius: {{draw.radiusRange}}</label>
         <input ng-model="draw.radiusRange" type="range" class="radiusRange" min="3" max="20">
         <button class="characterDraw"> Draw Character </button>
