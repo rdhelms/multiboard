@@ -13,7 +13,7 @@ class SceneController < ApplicationController
   end
 
   def create
-    @scene = Scene.new(name: params[:name], data: params[:data])
+    @scene = Scene.new(name: params[:name], img: params[:img])
     if @scene.save
       render json: @scene
     else

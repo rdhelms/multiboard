@@ -15,12 +15,12 @@
       }
     }
 
-    self.getPublicBackgroundByName = function(name) {
+    self.getPublicBackgroundById = function(background) {
       $.ajax({
-        url: "background/get?name=" + name,
+        url: "background/get?id=" + background.id,
         method: "GET",
         success: function(response) {
-          console.log(response);
+          return response;
         },
         error: function(error) {
           return error;
@@ -34,7 +34,7 @@
         method: "GET",
         success: function(response) {
           encodeURIComponent(JSON.parse(response));
-          console.log(response);
+          return response;
         },
         error: function(error) {
           return error;
@@ -58,7 +58,7 @@
         success: function(response) {
         },
         error: function(error) {
-          console.log(error);
+          return error;
         }
       });
     }
@@ -69,10 +69,10 @@
         method: "PATCH",
         data: background,
         success: function(response) {
-          console.log(response);
+          return response;
         },
         error: function(error) {
-          console.log(error);
+          return error;
         }
       });
     }

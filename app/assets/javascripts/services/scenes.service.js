@@ -35,12 +35,12 @@
       return sceneFound;
     }
 
-    this.getPublicSceneByName = function(name) {
+    this.getPublicSceneById = function(scene) {
       $.ajax({
-        url: "board/get?name=" + name,
+        url: "scene/get?id=" + scene.id,
         method: "GET",
         success: function(response) {
-          return response;
+          encodeURIComponent(JSON.parse(response));
         },
         error: function(error) {
           return error;
@@ -50,8 +50,30 @@
 
     this.getPublicScenes = function() {
       $.ajax({
-        url: "board/get",
+        url: "scene/index",
         method: "GET",
+        success: function(response) {
+          encodeURIComponent(JSON.parse(response));
+        },
+        error: function(error) {
+          return error;
+        }
+      });
+    }
+
+    this.publishScene = function(scene) {
+
+      var sceneArr = scene.staticArr;
+
+      var imageArr = [];
+      sceneArr.forEach(function(object) {
+        imageArr.push(encodeURIComponent(JSON.stringify(object)));
+      });
+
+      $.ajax({
+        url: "scene/create?name=" + scene.name + "&img=" + imageArr,
+        method: "POST",
+        data: scene,
         success: function(response) {
           return response;
         },
@@ -61,30 +83,16 @@
       });
     }
 
-    this.publishScene = function(scene) {
-      $.ajax({
-        url: "board?name=" + scene.name,
-        method: "POST",
-        data: scene,
-        success: function(response) {
-          console.log(response);
-        },
-        error: function(error) {
-          console.log(error);
-        }
-      });
-    }
-
     this.updateScene = function(scene) {
       $.ajax({
-        url: "board?name=" + scene.name,
+        url: "scene/update?name=" + scene.name,
         method: "POST",
         data: scene,
         success: function(response) {
-          console.log(response);
+          return response;
         },
         error: function(error) {
-          console.log(error);
+          return error;
         }
       });
     }
