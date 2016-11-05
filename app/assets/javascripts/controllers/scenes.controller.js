@@ -11,7 +11,29 @@ angular.module('multiboard').controller('scenesCtrl', function(Scenes, Backgroun
   this.userScenes = Scenes.fetch('user') || [];   // Get all the localStorage scenes. If none, get an empty array.
   this.publicScenes = Scenes.fetch('public') || [];   // Get all the database scenes. If none, get an empty array.
   this.userBackgrounds = Backgrounds.fetch('user') || [];   // Get all the localStorage backgrounds. If none, get an empty array.
-  this.publicBackgrounds = Backgrounds.fetch('public') || [];   // Get all the database backgrounds. If none, get an empty array.
+  this.publicBackgrounds = [];
+  Backgrounds.fetch('public').then(function(response) {
+    var $canvasTest = $('<canvas width=700 height=500>').css({
+      'background': 'white'
+    });
+    var drawTest = $canvasTest[0].getContext('2d');
+    var partialBackgrounds = response.data;
+    partialBackgrounds.forEach(function(background) {
+      var backgroundInfo = {
+        name: background.name,
+        staticArr: JSON.parse('[' + background.img + ']'),
+        thumbnail: ''
+      };
+      var newBackground = Backgrounds.construct(backgroundInfo);
+      for (var index = 0; index < newBackground.staticArr.length; index++) {
+        var square = newBackground.staticArr[index];
+        drawTest.fillStyle = square.color;
+        drawTest.fillRect(square.x, square.y, square.width, square.height);
+      }
+      newBackground.thumbnail = $canvasTest[0].toDataURL();
+      self.publicBackgrounds.push(newBackground);
+    });
+  }) || [];   // Get all the database backgrounds. If none, get an empty array.
 
   //  Called when the user clicks on a scene.
   //  Changes the current Scene in localStorage to the one that was clicked.

@@ -1,5 +1,6 @@
 (function() {
-  angular.module('multiboard').service('Backgrounds', function(Background, localStorageService) {
+  angular.module('multiboard').service('Backgrounds', function($http, Background, localStorageService) {
+    var self = this;
 
     function setBackgrounds(backgrounds) {
       localStorageService.set('boardBackgrounds', backgrounds);
@@ -11,29 +12,23 @@
           return localStorageService.get('boardBackgrounds') || [];
           break;
         case 'public':
-          return getPublicBackgrounds() || [];
+          return self.getPublicBackgrounds() || [];
       }
     }
 
-    self.getPublicBackgroundById = function(background) {
+    this.getPublicBackgrounds = function() {
+      var fullResponse = $http({
+        url: "background/index",
+        method: "GET"
+      });
+      return fullResponse;
+    }
+
+    this.getPublicBackgroundById = function(background) {
       $.ajax({
         url: "background/get?id=" + background.id,
         method: "GET",
         success: function(response) {
-          return response;
-        },
-        error: function(error) {
-          return error;
-        }
-      });
-    }
-
-    self.getPublicBackgrounds = function() {
-      $.ajax({
-        url: "background/index",
-        method: "GET",
-        success: function(response) {
-          encodeURIComponent(JSON.parse(response));
           return response;
         },
         error: function(error) {
@@ -108,6 +103,9 @@
           break;
       }
     };
+    this.construct = function(backgroundContent) {
+      return new Background(backgroundContent);
+    }
     this.create = function(backgroundContent) {
       var backgrounds = getBackgrounds('user');
       var newBackground = new Background(backgroundContent);
