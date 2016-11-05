@@ -23,6 +23,9 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     static: false,
     background: true
   };
+  var undoBackgroundArray = [];   //Array to keep track of objects that were undone.
+  var undoObstacleArray = [];   //Array to keep track of objects that were undone.
+  var undoCharacterArray = [];   //Array to keep track of objects that were undone.
   this.speedRange = 5;     // How fast mobile objects should move.
   this.radiusRange = 5;  // Value of radius input in draw.html
   this.widthRangeBackground = 50;   // Value of width input in draw.html
@@ -197,6 +200,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   function handleKeyDown(event) {
     // If the user presses the left, right, up, or down arrow keys, toggle the movement direction accordingly
     if (event.keyCode === 37) { // Left Key
+      event.preventDefault();
       moving = {
         left: !moving.left,
         up: false,
@@ -204,6 +208,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
         down: false
       };
     } else if (event.keyCode === 38) { // Up Key
+      event.preventDefault();
       moving = {
         left: false,
         up: !moving.up,
@@ -211,6 +216,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
         down: false
       };
     } else if (event.keyCode === 39) { // Right Key
+      event.preventDefault();
       moving = {
         left: false,
         up: false,
@@ -218,6 +224,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
         down: false
       };
     } else if (event.keyCode === 40) { // Down Key
+      event.preventDefault();
       moving = {
         left: false,
         up: false,
@@ -316,6 +323,8 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
       static: false,
       background: false
     };
+    $('.option').removeClass('active');
+    $(this).addClass('active');
   });
 
   // When the Draw Obstacles button is clicked, change the drawing setting to static.
@@ -325,6 +334,8 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
       static: true,
       background: false
     }
+    $('.option').removeClass('active');
+    $(this).addClass('active');
   });
 
   // When the Draw Background button is clicked, change the drawing setting to background.
@@ -334,14 +345,55 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
       static: false,
       background: true
     }
+    $('.option').removeClass('active');
+    $(this).addClass('active');
+  });
+
+  // When the user clicks the undo button, remove the last element from the object array and push it to the undo array, based on current drawing type. Then redraw canvas.
+  $('.undoBtn').click(function() {
+    if (drawing.mobile && self.allMobileCircles.length > 0) {
+      var lastObj = self.allMobileCircles.pop();
+      undoCharacterArray.push(lastObj);
+    } else if (drawing.static && self.allObstacleSquares.length > 0) {
+      var lastObj = self.allObstacleSquares.pop();
+      undoObstacleArray.push(lastObj);
+    } else if (drawing.background && self.allBackgroundSquares.length > 0) {
+      var lastObj = self.allBackgroundSquares.pop();
+      undoBackgroundArray.push(lastObj);
+    }
+    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    drawBackgroundSquares();
+    drawObstacleSquares();
+    drawMobileCircles();
+  });
+
+  // When the user clicks the redo button, remove the last element from the undo array and push it to the object array, based on current drawing type. Then redraw canvas.
+  $('.redoBtn').click(function() {
+    if (drawing.mobile && undoCharacterArray.length > 0) {
+      var lastObj = undoCharacterArray.pop();
+      self.allMobileCircles.push(lastObj);
+    } else if (drawing.static && undoObstacleArray.length > 0) {
+      var lastObj = undoObstacleArray.pop();
+      self.allObstacleSquares.push(lastObj);
+    } else if (drawing.background && undoBackgroundArray.length > 0) {
+      var lastObj = undoBackgroundArray.pop();
+      self.allBackgroundSquares.push(lastObj);
+    }
+    self.draw.clearRect(0, 0, self.myCanvas.width, self.myCanvas.height);
+    drawBackgroundSquares();
+    drawObstacleSquares();
+    drawMobileCircles();
   });
 
   // When the Clear Canvas button is clicked, make the current Background and current Scene empty objects and reload the view.
   // Note: may need extra testing here.
   $('.clearCanvas').click(function() {
-    // self.allObstacleSquares = [];
-    // self.allMobileCircles = [];
-    // self.allBackgroundSquares = [];
+    self.allObstacleSquares = [];
+    self.allMobileCircles = [];
+    self.allBackgroundSquares = [];
+    var undoBackgroundArray = [];
+    var undoObstacleArray = [];
+    var undoCharacterArray = [];
     Scenes.selectScene({})
     Backgrounds.selectBackground({});
     $state.reload();

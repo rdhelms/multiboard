@@ -1,12 +1,16 @@
 <section class="drawSection">
     <div class="canvasNames">
-      <label for="backgroundName">Background Name: </label>
-      <input ng-model="draw.backgroundName" placeholder="Background Name">
-      <label for="sceneName">Scene Name: </label>
-      <input ng-model="draw.sceneName" placeholder="Scene Name">
+      <div>
+        <label for="backgroundName">Background: </label>
+        <input ng-model="draw.backgroundName" placeholder="Background Name">
+      </div>
+      <div>
+        <label for="sceneName">Scene: </label>
+        <input ng-model="draw.sceneName" placeholder="Scene Name">
+      </div>
     </div>
     <div class="leftOptions">
-      <div class="option">
+      <div class="option colorOption">
         <label for="colorPicker">Pick Color</label>
         <input ng-model="draw.currentColor" class="colorPicker" type="color">
       </div>
@@ -16,19 +20,19 @@
       </div>
 
       <div class="option">
-        <button class="saveScene">Save Scene</button>
-      </div>
-
-      <div class="option">
-        <button class="publishScene">Publish Scene</button>
-      </div>
-
-      <div class="option">
         <button class="saveBackground">Save Background</button>
       </div>
 
       <div class="option">
+        <button class="saveScene">Save Scene</button>
+      </div>
+
+      <div class="option">
         <button class="publishBackground">Publish Background</button>
+      </div>
+
+      <div class="option">
+        <button class="publishScene">Publish Scene</button>
       </div>
     </div>
 
@@ -37,28 +41,33 @@
     </div>
 
     <div class="rightOptions">
-      <div class="option">
+      <div class="option backgroundDraw range active">
         <label for="widthRange">Pick Width: {{draw.widthRangeBackground}}</label>
         <input ng-model="draw.widthRangeBackground" type="range" class="widthRangeBackground" min="3" max="700">
         <label for="heightRange">Pick Height: {{draw.heightRangeBackground}}</label>
         <input ng-model="draw.heightRangeBackground" type="range" class="heightRangeBackground" min="3" max="500">
-        <button class="backgroundDraw"> Draw Background </button>
+        <button> Draw Background </button>
       </div>
 
-      <div class="option">
+      <div class="option objectDraw range">
         <label for="widthRange">Pick Width: {{draw.widthRangeObstacle}}</label>
         <input ng-model="draw.widthRangeObstacle" type="range" class="widthRangeObstacle" min="3" max="700">
         <label for="heightRange">Pick Height: {{draw.heightRangeObstacle}}</label>
         <input ng-model="draw.heightRangeObstacle" type="range" class="heightRangeObstacle" min="3" max="500">
-        <button class="objectDraw"> Draw Obstacles </button>
+        <button> Draw Obstacles </button>
       </div>
 
-      <div class="option">
+      <div class="option range characterDraw">
         <label for="speedRange">Pick Speed: {{draw.speedRange}}</label>
         <input ng-model="draw.speedRange" type="range" class="speedRange" min="3" max="20">
         <label for="radiusRange">Pick Radius: {{draw.radiusRange}}</label>
         <input ng-model="draw.radiusRange" type="range" class="radiusRange" min="3" max="20">
-        <button class="characterDraw"> Draw Character </button>
+        <button> Draw Character </button>
+      </div>
+
+      <div class="option undoRedo">
+        <button class="undoBtn">Undo</button>
+        <button class="redoBtn">Redo</button>
       </div>
     </div>
 
