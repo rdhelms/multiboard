@@ -1,5 +1,5 @@
 (function() {
-  angular.module('multiboard').service('Scenes', function(Scene, localStorageService) {
+  angular.module('multiboard').service('Scenes', function($http, Scene, localStorageService) {
 
     var self = this;
 
@@ -35,6 +35,14 @@
       return sceneFound;
     }
 
+    this.getPublicScenes = function() {
+      var fullResponse = $http({
+        url: "scene/index",
+        method: "GET"
+      });
+      return fullResponse;
+    }
+
     this.getPublicSceneById = function(scene) {
       $.ajax({
         url: "scene/get?id=" + scene.id,
@@ -48,28 +56,12 @@
       });
     }
 
-    this.getPublicScenes = function() {
-      $.ajax({
-        url: "scene/index",
-        method: "GET",
-        success: function(response) {
-          encodeURIComponent(JSON.parse(response));
-        },
-        error: function(error) {
-          return error;
-        }
-      });
-    }
-
     this.publishScene = function(scene) {
-
       var sceneArr = scene.staticArr;
-
       var imageArr = [];
       sceneArr.forEach(function(object) {
         imageArr.push(encodeURIComponent(JSON.stringify(object)));
       });
-
       $.ajax({
         url: "scene/create?name=" + scene.name + "&img=" + imageArr,
         method: "POST",
@@ -109,6 +101,9 @@
           return getScenes('public');
           break;
       }
+    };
+    this.construct = function(sceneContent) {
+      return new Scene(sceneContent);
     };
     this.create = function(sceneContent) {
       var scenes = getScenes('user');

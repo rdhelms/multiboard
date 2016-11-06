@@ -5,6 +5,9 @@
 @import 'partials/setup/general';
 
 /***** Site Components ******/
+// @import 'partials/header';
+// @import 'partials/scenesBackgroundsSection';
+// @import 'partials/drawSection';
 
 * {
   margin: 0;
@@ -16,233 +19,14 @@ body {
   background: url("<%= asset_path('purty_wood.png')%>");
 }
 
-.allHeader {
-  z-index: 10;
-  background: url("<%= asset_path('dark_wood.png')%>");
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  width: 100%;
-  color: white;
-  height: 120px;
-  h1 {
-    font-family: Arial, sans-serif;
-    font-size: 3vw;
-  }
-  button {
-    margin: 10px 20px;
-    outline-style: none;
-    padding: 5px;
-    font-size: 1.5vw;
-    border-radius: 10px;
-    background: white;
-    box-shadow: 5px 5px 20px #333;
-    transition: all .2s ease;
-    &:hover {
-      transform: scale(1.1);
-    }
+@media only screen and (max-width: 1000px) {
+  body {
+    background: blue;
   }
 }
 
-.scenesSection {
-  position: relative;
-  top: 130px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  .scenesBackgrounds {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    .userContainer, .publicContainer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 50%;
-      min-width: 400px;
-      .sceneControlButtons, .publicControlButtons {
-        width: 100%;
-        height: 50px;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        margin-top: 10px;
-        button {
-          padding: 10px;
-          font-size: 1.5vw;
-          border-radius: 10px;
-          background: white;
-          box-shadow: 5px 5px 20px #333;
-          transition: all .2s ease;
-          &:hover {
-            transform: scale(1.1);
-          }
-        }
-      }
-      .userScenesBackgrounds, .publicScenesBackgrounds {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-      }
-      .userScenes, .userBackgrounds, .publicScenes, .publicBackgrounds {
-        padding: 10px;
-        background: rgba(0,0,0,0.5);
-        border-radius: 10px;
-        border: 2px solid white;
-        margin-top: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        h1 {
-          font-family: Arial, sans-serif;
-          font-size: 2.5vw;
-          color: white;
-        }
-        p {
-          font-family: Arial, sans-serif;
-          font-size: 2vw;
-        }
-        .sceneOption, .backgroundOption {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          margin: 10px;
-          background: white;
-          img {
-            width: 100%;
-          }
-          &:hover {
-            outline: 2px solid black;
-          }
-        }
-      }
-    }
-  }
-}
-
-.drawSection {
-  position: relative;
-  top: 130px;
-  display: flex;
-  justify-content: center;
-  width: 100vw;
-  padding: 40px;
-  .canvasNames {
-    position: relative;
-    left: 49.3%;
-    transform: translate(-50%, 0);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    padding: 5px;
-    width: 740px;
-    font-size: 20px;
-    font-family: Arial, sans-serif;
-    input {
-      border: 0;
-      border-radius: 5px;
-      padding: 10px;
-      font-size: 20px;
-      &:hover {
-        box-shadow: inset 0 0 5px blue;
-      }
-      &:focus {
-        outline-style: none;
-        box-shadow: inset 0 0 5px black;
-      }
-    }
-  }
-  .leftOptions {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    height: 450px;
-    input[type="color"] {
-      width: 50px;
-      height: 50px;
-    }
-    button {
-      margin: 10px 20px;
-      outline-style: none;
-      padding: 5px;
-      font-size: 1.5vw;
-      border-radius: 10px;
-      background: white;
-      box-shadow: 5px 5px 20px #333;
-      transition: all .2s ease;
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
-    .option {
-      display: flex;
-      flex-direction: column;
-    }
-    .colorOption {
-      align-items: center;
-    }
-  }
-
-  .canvasContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: url("<%= asset_path('dark_wood.png')%>");
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid black;
-    #myCanvas {
-      background: white;
-      // cursor: url("<%= asset_path('brush_cursor.png')%>"), auto;
-      cursor: crosshair;
-    }
-  }
-
-  .rightOptions {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 10px;
-    height: 550px;
-    .range {
-      padding: 10px;
-      border-radius: 10px;
-      &:hover {
-        outline: 5px solid white;
-      }
-      &.active {
-        background: rgba(255,255,255,0.7);
-      }
-    }
-    button {
-      margin: 10px 20px;
-      outline-style: none;
-      padding: 5px;
-      font-size: 1.5vw;
-      border-radius: 10px;
-      background: white;
-      box-shadow: 5px 5px 20px #333;
-      transition: all .2s ease;
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
-    .option {
-      display: flex;
-      flex-direction: column;
-    }
-    .undoRedo {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-    }
+@media only screen and (max-width: 700px) {
+  body {
+    background: green;
   }
 }
