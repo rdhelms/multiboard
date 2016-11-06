@@ -1,7 +1,7 @@
 #
 class SceneController < ApplicationController
   def index
-    @scene = Scene.all
+    @scenes = Scene.all
 
     render json: @scenes
   end
