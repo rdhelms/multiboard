@@ -68,7 +68,7 @@
         data: scene
       });
       request.then(function(response) {
-        console.log(response);
+        // Can do something after response is acquired here.
       });
     }
 

@@ -61,6 +61,7 @@ angular.module('multiboard').controller('scenesCtrl', function(Scenes, Backgroun
 
   // Called when the Refresh Backgrounds button is clicked.
   this.refreshBackgrounds = function() {
+    self.publicBackgrounds = [];
     // Similar to process for getting scenes from database.
     Backgrounds.fetch('public').then(function(response) {  // Get all the database backgrounds.
       var $canvasTest = $('<canvas width=700 height=500>').css({
@@ -88,10 +89,10 @@ angular.module('multiboard').controller('scenesCtrl', function(Scenes, Backgroun
 
   // Called when the Refresh Scenes button is clicked.
   this.refreshScenes = function() {
+    self.publicScenes = [];
     // Might be able to have the $http request here, rather than in the service.
     // NOTE: currently missing mobileArr
     Scenes.fetch('public').then(function(response) { // Get all the database scenes.
-      console.log(response);
       var partialScenes = response.data;  // This is the response from the database. Array of partial Scene objects.
       var $canvasTest = $('<canvas width=700 height=500>').css({  // This canvas is only created in order to view the thumbnail
         'background': 'white'
