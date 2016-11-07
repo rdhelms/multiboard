@@ -11,6 +11,12 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   var drawHandle = -1;  // Interval handle for drawing rate
   var moveHandle = -1;  // Interval handle for movement of mouse (possibly does not need to be global)
   var mouseMoveEvent;       // Global variable to track mouse movement events
+  var touchMoveEvent;       // Global variable to track touch movement events
+  var mobileWidth = 850;    // Width for mobile screen sizes
+  var tabletWidth = 1100;   // Width for tablet screen sizes
+  var tabletScale = 1.4;
+  var mobileScale = 2;
+  var moveType = '';    // Either mouse or touch
   var moved = false;    // Whether mouse has moved or not
   var moving = {        // Direction that the mobile objects should be moving.
     left: false,
@@ -46,8 +52,6 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   this.allObstacleSquares = this.currentScene.staticArr || [];  // Array of all static objects in current scene
   this.backgroundName = this.currentBackground.name || '';  // Current selected Background name
   this.allBackgroundSquares = this.currentBackground.staticArr || []; // Array of all static objects in current background
-  this.tabletScale = 1.4;
-  this.mobileScale = 2;
 
   /*
   *   Rectangle object constructor
@@ -68,10 +72,10 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     this.color = color;
     this.draw = function() {
       self.draw.fillStyle = this.color;
-      if (window.innerWidth <= 700) { // Mobile size
-        self.draw.fillRect(this.x * self.mobileScale, this.y / self.mobileScale, this.width, this.height);
-      } else if (window.innerWidth <= 1100) { // Tablet size
-        self.draw.fillRect(this.x * self.tabletScale, this.y / self.tabletScale, this.width, this.height);
+      if (window.innerWidth <= mobileWidth) { // Mobile size
+        self.draw.fillRect(this.x * mobileScale, this.y / mobileScale, this.width, this.height);
+      } else if (window.innerWidth <= tabletWidth) { // Tablet size
+        self.draw.fillRect(this.x * tabletScale, this.y / tabletScale, this.width, this.height);
       } else {  // Desktop size
         self.draw.fillRect(this.x, this.y, this.width, this.height);
       }
@@ -96,7 +100,13 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     this.draw = function() {
       self.draw.beginPath();
       self.draw.fillStyle = this.color;
-      self.draw.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+      if (window.innerWidth <= mobileWidth) { // Mobile size
+        self.draw.arc(this.x * mobileScale, this.y / mobileScale, this.radius, 0, 2 * Math.PI);
+      } else if (window.innerWidth <= tabletWidth) { // Tablet size
+        self.draw.arc(this.x * tabletScale, this.y / tabletScale, this.radius, 0, 2 * Math.PI);
+      } else {
+        self.draw.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+      }
       self.draw.fill();
       // Example for future reference: Can also draw using an image. Image should first be loaded on the page.
       // draw.drawImage(imgElem, this.x, this.y, this.radius, this.radius);
@@ -131,25 +141,43 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
       if (moved && drawing.mobile) { // Create, draw, and record a new mobile object
         var radius = parseInt(self.radiusRange);
         var color = self.currentColor;
-        var newCircle = new Circle(mouseMoveEvent.clientX - self.canvasPos.x, mouseMoveEvent.clientY - self.canvasPos.y, radius, color);
-        newCircle.draw();
-        self.allMobileCircles.push(newCircle);
+        if (moveType === 'mouse') {
+          var newCircle = new Circle(mouseMoveEvent.clientX - self.canvasPos.x, mouseMoveEvent.clientY - self.canvasPos.y, radius, color);
+          newCircle.draw();
+          self.allMobileCircles.push(newCircle);
+        } else if (moveType === 'touch') {
+          var newCircle = new Circle(touchMoveEvent.clientX - self.canvasPos.x, touchMoveEvent.clientY - self.canvasPos.y, radius, color);
+          newCircle.draw();
+          self.allMobileCircles.push(newCircle);
+        }
         moved = false;
       } else if (moved && drawing.static) {  // Create, draw, and record a new static object
         var width = parseInt(self.widthRangeObstacle);
         var height = parseInt(self.heightRangeObstacle);
         var color = self.currentColor;
-        var newSquare = new Square(mouseMoveEvent.clientX - width / 2 - self.canvasPos.x, mouseMoveEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
-        newSquare.draw();
-        self.allObstacleSquares.push(newSquare);
+        if (moveType === 'mouse') {
+          var newSquare = new Square(mouseMoveEvent.clientX - width / 2 - self.canvasPos.x, mouseMoveEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
+          newSquare.draw();
+          self.allObstacleSquares.push(newSquare);
+        } else if (moveType === 'touch') {
+          var newSquare = new Square(touchMoveEvent.clientX - width / 2 - self.canvasPos.x, touchMoveEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
+          newSquare.draw();
+          self.allObstacleSquares.push(newSquare);
+        }
         moved = false;
       } else if (moved && drawing.background) { // Create, draw, and record a new background object
         var width = parseInt(self.widthRangeBackground);
         var height = parseInt(self.heightRangeBackground);
         var color = self.currentColor;
-        var newSquare = new Square(mouseMoveEvent.clientX - width / 2 - self.canvasPos.x, mouseMoveEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
-        newSquare.draw();
-        self.allBackgroundSquares.push(newSquare);
+        if (moveType === 'mouse') {
+          var newSquare = new Square(mouseMoveEvent.clientX - width / 2 - self.canvasPos.x, mouseMoveEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
+          newSquare.draw();
+          self.allBackgroundSquares.push(newSquare);
+        } else if (moveType === 'touch') {
+          var newSquare = new Square(touchMoveEvent.clientX - width / 2 - self.canvasPos.x, touchMoveEvent.clientY - height / 2 - self.canvasPos.y, width, height, color);
+          newSquare.draw();
+          self.allBackgroundSquares.push(newSquare);
+        }
         moved = false;
       }
   }
@@ -183,12 +211,24 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
           moving.down = false;
         }
       });
-      // Check for collisions with the canvas border as well.
+      // Check for collisions with the canvas border as well. Take resizing screen sizes into account.
+      var canvasEdgeRight;
+      var canvasEdgeBottom;
+      if (window.innerWidth <= mobileWidth) {
+        canvasEdgeRight = self.myCanvas.width / mobileScale;
+        canvasEdgeBottom = self.myCanvas.height * mobileScale;
+      } else if (window.innerWidth <= tabletWidth) {
+        canvasEdgeRight = self.myCanvas.width / tabletScale;
+        canvasEdgeBottom = self.myCanvas.height * tabletScale;
+      } else {
+        canvasEdgeRight = self.myCanvas.width;
+        canvasEdgeBottom = self.myCanvas.height;
+      }
       if (circle.x <= 0) {
         foundCollision.left = true;
         moving.left = false;
       }
-      if (circle.x >= self.myCanvas.width) {
+      if (circle.x >= canvasEdgeRight) {
         foundCollision.right = true;
         moving.right = false;
       }
@@ -196,7 +236,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
         foundCollision.up = true;
         moving.up = false;
       }
-      if (circle.y >= self.myCanvas.height) {
+      if (circle.y >= canvasEdgeBottom) {
         foundCollision.down = true;
         moving.down = false;
       }
@@ -489,6 +529,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   $(self.myCanvas).on('mouseup', mouseUp);
   $(self.myCanvas).on('mouseleave', mouseUp);
   $(self.myCanvas).on('mousemove', function(event) {
+    moveType = 'mouse';
     mouseMoveEvent = event;
     moved = true;
   });
@@ -533,5 +574,18 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   drawBackgroundSquares();
   drawMobileCircles();
   drawObstacleSquares();
+
+  // Experimental touch screen support
+  // When the mouse is pressed, released, moved, or leaves the canvas, run the corresponding function.
+  $(self.myCanvas).on('touchstart', mouseDown);
+  $(self.myCanvas).on('touchend', mouseUp);
+  $(self.myCanvas).on('touchcancel', mouseUp);
+  $(self.myCanvas).on('touchmove', function(event) {
+    moveType = 'touch';
+    event.preventDefault();
+    touchMoveEvent = event.touches[0];
+    moved = true;
+  });
+
 
 });
