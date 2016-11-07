@@ -26,3 +26,6 @@ For local use:
   - run the rails server
 
 For additional ideas please submit directly via github.  
+
+Creators:
+  - [Robby](https://github.com/rdhelms) and [Fitch](https://github.com/Fitchburgh)
