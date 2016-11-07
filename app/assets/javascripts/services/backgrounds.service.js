@@ -46,15 +46,13 @@
         imageArr.push(encodeURIComponent(JSON.stringify(object)));
       });
 
-      $.ajax({
+      var request = $http({
         url: "background/create?name=" + background.name + "&img=" + imageArr,
         method: "POST",
         data: background,
-        success: function(response) {
-        },
-        error: function(error) {
-          return error;
-        }
+      });
+      request.then(function(response) {
+        console.log(response);
       });
     }
 

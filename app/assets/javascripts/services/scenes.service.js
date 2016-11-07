@@ -62,16 +62,13 @@
       sceneArr.forEach(function(object) {
         imageArr.push(encodeURIComponent(JSON.stringify(object)));
       });
-      $.ajax({
+      var request = $http({
         url: "scene/create?name=" + scene.name + "&img=" + imageArr,
         method: "POST",
-        data: scene,
-        success: function(response) {
-          return response;
-        },
-        error: function(error) {
-          return error;
-        }
+        data: scene
+      });
+      request.then(function(response) {
+        console.log(response);
       });
     }
 
