@@ -31,18 +31,23 @@ body {
 
 @media only screen and (max-width: 850px) {   // Mobile widths
   #myCanvas {
-    // Scale factor: 2.5 and 1
+    // Scale factor: 2.5 and 1.6
     width: 280px;
-    height: 500px
+    height: 312.5px;
   }
 
   .allHeader {
+    height: 70px !important;
     .instructions {
       padding: 2px !important;
       font-size: 10px !important;
     }
+    h1 {
+      position: absolute;
+    }
     button {
-      font-size: 15px !important;
+      margin: 0 25px !important;
+      font-size: 10px !important;
     }
   }
 
@@ -53,6 +58,7 @@ body {
   }
 
   .drawSection {
+    top: 80px !important;
     flex-direction: column;
     padding: 10px !important;
     .canvasNames {
