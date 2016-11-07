@@ -19,14 +19,17 @@ body {
   background: url("<%= asset_path('purty_wood.png')%>");
 }
 
-@media only screen and (max-width: 1000px) {
-  body {
-    background: blue;
+@media only screen and (max-width: 1100px) {
+  // Tablet widths
+  #myCanvas {
+    width: 500px;
+    height: 700px;
   }
 }
 
 @media only screen and (max-width: 700px) {
-  body {
-    background: green;
+  // Mobile widths
+  #myCanvas {
+    width: 300px;
   }
 }
