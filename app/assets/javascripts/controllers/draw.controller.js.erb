@@ -46,6 +46,8 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   this.allObstacleSquares = this.currentScene.staticArr || [];  // Array of all static objects in current scene
   this.backgroundName = this.currentBackground.name || '';  // Current selected Background name
   this.allBackgroundSquares = this.currentBackground.staticArr || []; // Array of all static objects in current background
+  this.tabletScale = 1.4;
+  this.mobileScale = 2;
 
   /*
   *   Rectangle object constructor
@@ -66,7 +68,13 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     this.color = color;
     this.draw = function() {
       self.draw.fillStyle = this.color;
-      self.draw.fillRect(this.x, this.y, this.width, this.height);
+      if (window.innerWidth <= 700) { // Mobile size
+        self.draw.fillRect(this.x * self.mobileScale, this.y / self.mobileScale, this.width, this.height);
+      } else if (window.innerWidth <= 1100) { // Tablet size
+        self.draw.fillRect(this.x * self.tabletScale, this.y / self.tabletScale, this.width, this.height);
+      } else {  // Desktop size
+        self.draw.fillRect(this.x, this.y, this.width, this.height);
+      }
     }
   }
 

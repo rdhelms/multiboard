@@ -20,16 +20,60 @@ body {
 }
 
 @media only screen and (max-width: 1100px) {
+  //Original canvas size: width(700) height(500)
+
   // Tablet widths
   #myCanvas {
+    // Scale factor: 1.4
     width: 500px;
     height: 700px;
   }
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 850px) {
   // Mobile widths
   #myCanvas {
-    width: 300px;
+    // Scale factor: 2
+    width: 350px;
+    height: 1000px
+  }
+
+  .allHeader {
+    button {
+      font-size: 20px !important;
+    }
+  }
+
+  .scenesBackgroundsSection {
+    button {
+      font-size: 20px !important;
+    }
+  }
+
+  .drawSection {
+    flex-direction: column;
+    padding: 10px !important;
+    .canvasNames {
+      position: static !important;
+      transform: translate(0, 0) !important;
+      flex-direction: column;
+      align-items: flex-start !important;
+      width: auto !important;
+      div {
+        margin: 10px;
+      }
+    }
+    .canvasContainer {
+      order: 2;
+    }
+    .leftOptions {
+      order: 3;
+    }
+    .rightOptions {
+      order: 1;
+    }
+    button {
+      font-size: 30px !important;
+    }
   }
 }
