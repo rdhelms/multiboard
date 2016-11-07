@@ -19,10 +19,9 @@ body {
   background: url("<%= asset_path('purty_wood.png')%>");
 }
 
-@media only screen and (max-width: 1100px) {
-  //Original canvas size: width(700) height(500)
 
-  // Tablet widths
+//Original canvas size: width(700) height(500)
+@media only screen and (max-width: 1100px) {    // Tablet widths
   #myCanvas {
     // Scale factor: 1.4
     width: 500px;
@@ -30,23 +29,26 @@ body {
   }
 }
 
-@media only screen and (max-width: 850px) {
-  // Mobile widths
+@media only screen and (max-width: 850px) {   // Mobile widths
   #myCanvas {
-    // Scale factor: 2
-    width: 350px;
-    height: 1000px
+    // Scale factor: 2.5 and 1
+    width: 280px;
+    height: 500px
   }
 
   .allHeader {
+    .instructions {
+      padding: 2px !important;
+      font-size: 10px !important;
+    }
     button {
-      font-size: 20px !important;
+      font-size: 15px !important;
     }
   }
 
   .scenesBackgroundsSection {
     button {
-      font-size: 20px !important;
+      font-size: 15px !important;
     }
   }
 
@@ -65,15 +67,19 @@ body {
     }
     .canvasContainer {
       order: 2;
+      height: auto !important;
     }
     .leftOptions {
       order: 3;
+      height: auto !important;
     }
     .rightOptions {
       order: 1;
+      height: auto !important;
     }
     button {
-      font-size: 30px !important;
+      margin: 2px !important;
+      font-size: 15px !important;
     }
   }
 }

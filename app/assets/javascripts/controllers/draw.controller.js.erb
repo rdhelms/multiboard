@@ -15,7 +15,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
   var mobileWidth = 850;    // Width for mobile screen sizes
   var tabletWidth = 1100;   // Width for tablet screen sizes
   var tabletScale = 1.4;
-  var mobileScale = 2;
+  var mobileScale = 2.5;    // On mobile, don't scale the height
   var moveType = '';    // Either mouse or touch
   var moved = false;    // Whether mouse has moved or not
   var moving = {        // Direction that the mobile objects should be moving.
@@ -73,7 +73,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
     this.draw = function() {
       self.draw.fillStyle = this.color;
       if (window.innerWidth <= mobileWidth) { // Mobile size
-        self.draw.fillRect(this.x * mobileScale, this.y / mobileScale, this.width, this.height);
+        self.draw.fillRect(this.x * mobileScale, this.y, this.width, this.height);
       } else if (window.innerWidth <= tabletWidth) { // Tablet size
         self.draw.fillRect(this.x * tabletScale, this.y / tabletScale, this.width, this.height);
       } else {  // Desktop size
@@ -101,7 +101,7 @@ angular.module('multiboard').controller('drawCtrl', function(Scenes, Backgrounds
       self.draw.beginPath();
       self.draw.fillStyle = this.color;
       if (window.innerWidth <= mobileWidth) { // Mobile size
-        self.draw.arc(this.x * mobileScale, this.y / mobileScale, this.radius, 0, 2 * Math.PI);
+        self.draw.arc(this.x * mobileScale, this.y, this.radius, 0, 2 * Math.PI);
       } else if (window.innerWidth <= tabletWidth) { // Tablet size
         self.draw.arc(this.x * tabletScale, this.y / tabletScale, this.radius, 0, 2 * Math.PI);
       } else {
