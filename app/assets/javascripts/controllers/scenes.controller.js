@@ -76,6 +76,7 @@ angular.module('multiboard').controller('scenesCtrl', function(Scenes, Backgroun
           thumbnail: ''
         };
         var newBackground = Backgrounds.construct(backgroundInfo);
+        drawTest.clearRect(0, 0, $canvasTest[0].width, $canvasTest[0].height);
         for (var index = 0; index < newBackground.staticArr.length; index++) {
           var square = newBackground.staticArr[index];
           drawTest.fillStyle = square.color;
@@ -105,6 +106,7 @@ angular.module('multiboard').controller('scenesCtrl', function(Scenes, Backgroun
           thumbnail: ''
         };
         var newScene = Scenes.construct(sceneInfo); // Create a full scene object based on the partial information.
+        drawTest.clearRect(0, 0, $canvasTest[0].width, $canvasTest[0].height);
         for (var index = 0; index < newScene.staticArr.length; index++) { // Loop through the array of obstacles and draw them all.
           var square = newScene.staticArr[index];
           drawTest.fillStyle = square.color;
